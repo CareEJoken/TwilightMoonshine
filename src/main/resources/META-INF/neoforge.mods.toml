@@ -1,0 +1,33 @@
+modLoader = "javafml"
+loaderVersion = "[4,)"
+license = "MIT"
+
+[[mods]]
+    modId = "twilightmoonshine"
+    version = "${file.jarVersion}"
+    displayName = "Twilight Moonshine"
+    description = "Tweaks for Twilight Forest - re-enables Mushroom Tower generation and adds map icon."
+
+[[mixins]]
+    config = "twilightmoonshine.mixins.json"
+
+[[dependencies.twilightmoonshine]]
+    modId = "neoforge"
+    type = "required"
+    versionRange = "[21.1,)"
+    ordering = "NONE"
+    side = "BOTH"
+
+[[dependencies.twilightmoonshine]]
+    modId = "minecraft"
+    type = "required"
+    versionRange = "[1.21.1,)"
+    ordering = "NONE"
+    side = "BOTH"
+
+[[dependencies.twilightmoonshine]]
+    modId = "twilightforest"
+    type = "required"
+    versionRange = "[4.8,)"
+    ordering = "BEFORE"
+    side = "BOTH"

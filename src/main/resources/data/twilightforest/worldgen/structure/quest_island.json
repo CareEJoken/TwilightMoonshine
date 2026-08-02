@@ -1,0 +1,9 @@
+{
+  "type": "twilightmoonshine:quest_island",
+  "biomes": [
+    "twilightforest:lake"
+  ],
+  "spawn_overrides": {},
+  "step": "surface_structures",
+  "terrain_adaptation": "none"
+}

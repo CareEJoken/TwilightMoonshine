@@ -1,0 +1,43 @@
+plugins {
+    id 'java-library'
+    id 'net.neoforged.moddev' version "${mdg_version}"
+}
+
+group = project.group_name
+version = project.mod_version
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+neoForge {
+    version = project.neo_version
+
+    parchment {
+        minecraftVersion = '1.21.1'
+        mappingsVersion = '2024.11.17'
+    }
+
+    runs {
+        client {
+            client()
+            // 将 TF universal jar 加入运行时，以便 dev 环境测试
+            jvmArgument '-Dtwilight.devenv=true'
+        }
+    }
+
+    mods {
+        twilightmoonshine {
+            sourceSet(sourceSets.main)
+        }
+    }
+}
+
+dependencies {
+    // TF slim jar 用于编译（包含所有 TF 类，但不含 shaded beanification）
+    compileOnly files('../twilightforest/build/libs/twilightforest-1.21.1-4.8-slim.jar')
+    // 运行时加载 TF universal jar（含 shaded beanification）
+    runtimeOnly files('../twilightforest/build/libs/twilightforest-1.21.1-4.8-universal.jar')
+}

@@ -1,0 +1,11 @@
+{
+  "placement": {
+    "type": "twilightforest:landmark_grid"
+  },
+  "structures": [
+    {
+      "structure": "twilightforest:quest_island",
+      "weight": 1
+    }
+  ]
+}
