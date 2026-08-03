@@ -3,27 +3,18 @@ package twilightmoonshine;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.sounds.SoundEvents;
-import net.neoforged.neoforge.common.SoundActions;
-import net.minecraft.world.item.BucketItem;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.LiquidBlock;
-import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.item.SpawnEggItem;
 import net.minecraft.world.level.levelgen.structure.StructureType;
 import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceType;
-import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.saveddata.maps.MapDecorationType;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
-import net.neoforged.neoforge.fluids.BaseFlowingFluid;
-import net.neoforged.neoforge.fluids.FluidType;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
-import net.neoforged.neoforge.registries.NeoForgeRegistries;
-import twilightmoonshine.fluid.MoonSpringFluid;
+import twilightmoonshine.entity.Kaguya;
 import twilightmoonshine.structure.QuestIslandPiece;
 import twilightmoonshine.structure.QuestIslandStructure;
 
@@ -55,55 +46,30 @@ public class TwilightMoonshine {
     public static final DeferredHolder<StructurePieceType, StructurePieceType> QUEST_ISLAND_PIECE =
         STRUCTURE_PIECE_TYPES.register("quest_island_piece", () -> QuestIslandPiece::new);
 
-    // --- Fluid type ---
-    public static final DeferredRegister<FluidType> FLUID_TYPES =
-        DeferredRegister.create(NeoForgeRegistries.FLUID_TYPES, MODID);
+    // --- Entity types ---
+    public static final DeferredRegister<EntityType<?>> ENTITY_TYPES =
+        DeferredRegister.create(Registries.ENTITY_TYPE, MODID);
 
-    public static final DeferredHolder<FluidType, FluidType> MOON_SPRING_TYPE =
-        FLUID_TYPES.register("moon_spring", () -> new FluidType(FluidType.Properties.create()
-            .descriptionId("block.twilightmoonshine.moon_spring")
-            .fallDistanceModifier(0F)
-            .canExtinguish(true)
-            .canHydrate(true)
-            .canConvertToSource(true)
-            .supportsBoating(true)
-            .sound(SoundActions.BUCKET_FILL, SoundEvents.BUCKET_FILL)
-            .sound(SoundActions.BUCKET_EMPTY, SoundEvents.BUCKET_EMPTY)
-            .sound(SoundActions.FLUID_VAPORIZE, SoundEvents.FIRE_EXTINGUISH)));
+    public static final DeferredHolder<EntityType<?>, EntityType<Kaguya>> KAGUYA =
+        ENTITY_TYPES.register("kaguya", () -> EntityType.Builder
+            .of(Kaguya::new, MobCategory.CREATURE)
+            .sized(1.4F, 2.4F)
+            .clientTrackingRange(8)
+            .build("kaguya"));
 
-    // --- Fluids ---
-    public static final DeferredRegister<Fluid> FLUIDS =
-        DeferredRegister.create(Registries.FLUID, MODID);
-
-    public static final DeferredHolder<Fluid, BaseFlowingFluid> MOON_SPRING_SOURCE =
-        FLUIDS.register("moon_spring", () -> new BaseFlowingFluid.Source(MoonSpringFluid.createProperties()));
-
-    public static final DeferredHolder<Fluid, BaseFlowingFluid> MOON_SPRING_FLOWING =
-        FLUIDS.register("flowing_moon_spring", () -> new BaseFlowingFluid.Flowing(MoonSpringFluid.createProperties()));
-
-    // --- Blocks ---
-    public static final DeferredRegister<Block> BLOCKS =
-        DeferredRegister.create(Registries.BLOCK, MODID);
-
-    public static final DeferredHolder<Block, LiquidBlock> MOON_SPRING_BLOCK =
-        BLOCKS.register("moon_spring", () -> new LiquidBlock(MOON_SPRING_SOURCE.value(),
-            BlockBehaviour.Properties.ofFullCopy(Blocks.WATER)));
-
-    // --- Items ---
-    public static final DeferredRegister<Item> ITEMS =
+    // --- Spawn eggs ---
+    public static final DeferredRegister<Item> SPAWN_EGGS =
         DeferredRegister.create(Registries.ITEM, MODID);
 
-    public static final DeferredHolder<Item, BucketItem> MOON_SPRING_BUCKET =
-        ITEMS.register("moon_spring_bucket", () -> new BucketItem(MOON_SPRING_SOURCE.value(),
-            new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
+    public static final DeferredHolder<Item, SpawnEggItem> KAGUYA_SPAWN_EGG =
+        SPAWN_EGGS.register("kaguya_spawn_egg", () -> new SpawnEggItem(
+            KAGUYA.value(), 0xE0D8C8, 0x8090C0, new Item.Properties()));
 
     public TwilightMoonshine(IEventBus modEventBus) {
         MAP_DECORATIONS.register(modEventBus);
         STRUCTURE_TYPES.register(modEventBus);
         STRUCTURE_PIECE_TYPES.register(modEventBus);
-        FLUID_TYPES.register(modEventBus);
-        FLUIDS.register(modEventBus);
-        BLOCKS.register(modEventBus);
-        ITEMS.register(modEventBus);
+        ENTITY_TYPES.register(modEventBus);
+        SPAWN_EGGS.register(modEventBus);
     }
 }

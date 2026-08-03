@@ -1,5 +1,4 @@
 {
-  "block.twilightmoonshine.moon_spring": "Moon Spring",
-  "item.twilightmoonshine.moon_spring_bucket": "Moon Spring Bucket",
-  "fluid_type.twilightmoonshine.moon_spring": "Moon Spring"
+  "entity.twilightmoonshine.kaguya": "Kaguya",
+  "item.twilightmoonshine.kaguya_spawn_egg": "Kaguya Spawn Egg"
 }
