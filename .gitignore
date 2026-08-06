@@ -28,3 +28,4 @@ crash-reports/
 
 # Dev
 *.log
+build_and_deploy.bat

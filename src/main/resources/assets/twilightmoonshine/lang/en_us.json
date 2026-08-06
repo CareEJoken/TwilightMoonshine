@@ -1,4 +1,14 @@
 {
-  "entity.twilightmoonshine.kaguya": "Kaguya",
-  "item.twilightmoonshine.kaguya_spawn_egg": "Kaguya Spawn Egg"
+  "entity.twilightmoonshine.moon_rabbit": "Moon Rabbit",
+  "item.twilightmoonshine.moon_rabbit_spawn_egg": "Moon Rabbit Spawn Egg",
+  "advancement.twilightmoonshine.feed_moon_rabbit": "Thou Art the Rabbit!",
+  "advancement.twilightmoonshine.feed_moon_rabbit.desc": "Feed a carrot to a Moon Rabbit",
+  "subtitles.twilightmoonshine.moon_rabbit.ambient": "Moon Rabbit squeaks",
+  "subtitles.twilightmoonshine.moon_rabbit.hurt": "Moon Rabbit hurts",
+  "subtitles.twilightmoonshine.moon_rabbit.death": "Moon Rabbit dies",
+  "subtitles.twilightmoonshine.moon_rabbit.jump": "Moon Rabbit hops",
+  "subtitles.moon_rabbit.ambient": "Moon Rabbit squeaks",
+  "subtitles.moon_rabbit.hurt": "Moon Rabbit hurts",
+  "subtitles.moon_rabbit.death": "Moon Rabbit dies",
+  "subtitles.moon_rabbit.jump": "Moon Rabbit hops"
 }

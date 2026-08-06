@@ -1,0 +1,36 @@
+{
+  "parent": "twilightforest:root",
+  "criteria": {
+    "feed_moon_rabbit": {
+      "conditions": {
+        "entity": {
+          "type": "twilightmoonshine:moon_rabbit"
+        },
+        "item": {
+          "items": "minecraft:carrot"
+        }
+      },
+      "trigger": "minecraft:player_interacted_with_entity"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "advancement.twilightmoonshine.feed_moon_rabbit.desc"
+    },
+    "hidden": true,
+    "icon": {
+      "count": 1,
+      "id": "twilightforest:shika_senbei"
+    },
+    "title": {
+      "translate": "advancement.twilightmoonshine.feed_moon_rabbit"
+    }
+  },
+  "requirements": [
+    [
+      "feed_moon_rabbit"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

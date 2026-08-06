@@ -1,0 +1,14 @@
+{
+  "entity.twilightmoonshine.moon_rabbit": "月兔",
+  "item.twilightmoonshine.moon_rabbit_spawn_egg": "月兔刷怪蛋",
+  "advancement.twilightmoonshine.feed_moon_rabbit": "汝才是兔子！",
+  "advancement.twilightmoonshine.feed_moon_rabbit.desc": "给月兔喂食胡萝卜",
+  "subtitles.twilightmoonshine.moon_rabbit.ambient": "月兔：叫声",
+  "subtitles.twilightmoonshine.moon_rabbit.hurt": "月兔：受伤",
+  "subtitles.twilightmoonshine.moon_rabbit.death": "月兔：死亡",
+  "subtitles.twilightmoonshine.moon_rabbit.jump": "月兔：跳跃",
+  "subtitles.moon_rabbit.ambient": "月兔：叫声",
+  "subtitles.moon_rabbit.hurt": "月兔：受伤",
+  "subtitles.moon_rabbit.death": "月兔：死亡",
+  "subtitles.moon_rabbit.jump": "月兔：跳跃"
+}

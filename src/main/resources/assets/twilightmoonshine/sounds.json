@@ -1,0 +1,18 @@
+{
+  "moon_rabbit.ambient": {
+    "subtitle": "subtitles.twilightmoonshine.moon_rabbit.ambient",
+    "sounds": ["minecraft:mob/rabbit/idle1", "minecraft:mob/rabbit/idle2", "minecraft:mob/rabbit/idle3", "minecraft:mob/rabbit/idle4"]
+  },
+  "moon_rabbit.hurt": {
+    "subtitle": "subtitles.twilightmoonshine.moon_rabbit.hurt",
+    "sounds": ["minecraft:mob/rabbit/hurt1", "minecraft:mob/rabbit/hurt2", "minecraft:mob/rabbit/hurt3", "minecraft:mob/rabbit/hurt4"]
+  },
+  "moon_rabbit.death": {
+    "subtitle": "subtitles.twilightmoonshine.moon_rabbit.death",
+    "sounds": ["minecraft:mob/rabbit/hurt1", "minecraft:mob/rabbit/hurt2"]
+  },
+  "moon_rabbit.jump": {
+    "subtitle": "subtitles.twilightmoonshine.moon_rabbit.jump",
+    "sounds": ["minecraft:mob/rabbit/hop1", "minecraft:mob/rabbit/hop2", "minecraft:mob/rabbit/hop3", "minecraft:mob/rabbit/hop4"]
+  }
+}
