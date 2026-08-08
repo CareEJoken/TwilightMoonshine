@@ -1,5 +1,6 @@
 package twilightmoonshine.structure;
 
+import net.minecraft.core.Direction;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -7,6 +8,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.StructureManager;
 import net.minecraft.world.level.WorldGenLevel;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.DoublePlantBlock;
 import net.minecraft.world.level.block.state.BlockState;
@@ -152,16 +154,32 @@ public class QuestIslandPiece extends StructurePiece {
             }
         }
 
-        // force walls to recalculate connections
+        // Recalculate wall connections explicitly, one wall at a time.
+        // We cannot rely on updateNeighbourShapes during worldgen because its
+        // internal Block.updateOrDestroy call may skip setBlock when the state
+        // appears unchanged to the chunk. Instead, compute the corrected state
+        // via updateShape per direction and setBlock it directly.
         mpos = new BlockPos.MutableBlockPos();
+        BlockPos.MutableBlockPos nPos = new BlockPos.MutableBlockPos();
         for (int x = boundingBox.minX(); x <= boundingBox.maxX(); x++) {
             for (int y = boundingBox.minY(); y <= boundingBox.maxY(); y++) {
                 for (int z = boundingBox.minZ(); z <= boundingBox.maxZ(); z++) {
                     mpos.set(x, y, z);
                     if (!boundingBox.isInside(mpos)) continue;
                     BlockState state = level.getBlockState(mpos);
-                    if (state.is(Blocks.COBBLESTONE_WALL) || state.is(Blocks.MOSSY_COBBLESTONE_WALL)) {
-                        state.updateNeighbourShapes(level, mpos, 11, 0);
+                    if (!(state.is(Blocks.COBBLESTONE_WALL) || state.is(Blocks.MOSSY_COBBLESTONE_WALL)))
+                        continue;
+
+                    // Compute correct wall shape from all 6 neighbors
+                    BlockState corrected = state;
+                    for (Direction dir : Direction.values()) {
+                        nPos.setWithOffset(mpos, dir);
+                        BlockState nState = level.getBlockState(nPos);
+                        corrected = corrected.updateShape(dir, nState, level, mpos, nPos);
+                    }
+
+                    if (corrected != state) {
+                        level.setBlock(mpos, corrected, Block.UPDATE_ALL_IMMEDIATE);
                     }
                 }
             }
