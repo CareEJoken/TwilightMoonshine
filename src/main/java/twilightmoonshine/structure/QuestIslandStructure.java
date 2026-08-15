@@ -27,7 +27,7 @@ public class QuestIslandStructure extends LandmarkStructure {
     protected StructurePiece getFirstPiece(GenerationContext context, RandomSource random,
                                             ChunkPos chunkPos, int x, int y, int z) {
         // y == getSeaLevel() because terrainAdaptation = NONE
-        return new QuestIslandPiece(x, y, z);
+        return new ProceduralQuestIslandPiece(x, y, z);
     }
 
     @Override
