@@ -3,7 +3,11 @@
   "package": "twilightmoonshine.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
-    "LegacyLandmarkPlacementsMixin"
+    "LegacyLandmarkPlacementsMixin",
+    "MixinLevel"
+  ],
+  "client": [
+    "MixinLightTexture"
   ],
   "injectors": {
     "defaultRequire": 1

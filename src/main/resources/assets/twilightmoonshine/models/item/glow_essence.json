@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "twilightmoonshine:item/glow_essence",
+    "layer1": "twilightmoonshine:item/glow_essence_particles"
+  }
+}

@@ -12,25 +12,41 @@ public class BrewingSetup {
 
     @SubscribeEvent
     public static void registerBrewing(RegisterBrewingRecipesEvent event) {
-        // Awkward Potion + Moon Stone Shard → Potion of Resistance
+        // 抗性药水的酿造配方已取消（物品本身保留）
+
+        // 水 + 月石碎片 → 微微发亮的药水（基底，无效果，类似平凡的药水）
         event.getBuilder().addMix(
-            Potions.AWKWARD,
+            Potions.WATER,
             TwilightMoonshine.MOON_STONE_SHARD.get(),
-            TwilightMoonshine.RESISTANCE_POTION
+            TwilightMoonshine.FAINTLY_GLOWING_POTION
         );
 
-        // Resistance + Redstone → Long Resistance
+        // 微微发亮的药水 + 荧光精华 → 荧光药水
         event.getBuilder().addMix(
-            TwilightMoonshine.RESISTANCE_POTION,
+            TwilightMoonshine.FAINTLY_GLOWING_POTION,
+            TwilightMoonshine.GLOW_ESSENCE.get(),
+            TwilightMoonshine.GLOW_POTION
+        );
+
+        // 荧光药水 + 红石 → 延长版荧光药水（无加强版）
+        event.getBuilder().addMix(
+            TwilightMoonshine.GLOW_POTION,
             Items.REDSTONE,
-            TwilightMoonshine.LONG_RESISTANCE_POTION
+            TwilightMoonshine.LONG_GLOW_POTION
         );
 
-        // Resistance + Glowstone Dust → Strong Resistance
+        // 微微发亮的药水 + 暮色植物萃取液 → 暮色药水
         event.getBuilder().addMix(
-            TwilightMoonshine.RESISTANCE_POTION,
-            Items.GLOWSTONE_DUST,
-            TwilightMoonshine.STRONG_RESISTANCE_POTION
+            TwilightMoonshine.FAINTLY_GLOWING_POTION,
+            TwilightMoonshine.TWILIGHT_PLANT_EXTRACT.get(),
+            TwilightMoonshine.TWILIGHT_POTION
+        );
+
+        // 暮色药水 + 红石 → 延长版暮色药水（无加强版）
+        event.getBuilder().addMix(
+            TwilightMoonshine.TWILIGHT_POTION,
+            Items.REDSTONE,
+            TwilightMoonshine.LONG_TWILIGHT_POTION
         );
     }
 }

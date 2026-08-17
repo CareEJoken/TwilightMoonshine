@@ -1,0 +1,6 @@
+{
+  "type": "twilightmoonshine:potion_arrow",
+  "potion": "twilightmoonshine:long_twilight",
+  "result": "minecraft:tipped_arrow",
+  "copy_potion": true
+}

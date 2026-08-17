@@ -8,7 +8,7 @@ import net.minecraft.world.entity.animal.Rabbit;
 
 public class MoonRabbitRenderer extends MobRenderer<Rabbit, MoonRabbitModel> {
 
-    private static final ResourceLocation TEXTURE =
+    public static final ResourceLocation TEXTURE =
             ResourceLocation.fromNamespaceAndPath("twilightmoonshine", "textures/entity/moon_rabbit/moon_rabbit.png");
 
     public MoonRabbitRenderer(EntityRendererProvider.Context context) {

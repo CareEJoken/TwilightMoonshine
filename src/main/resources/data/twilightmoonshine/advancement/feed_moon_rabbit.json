@@ -1,5 +1,5 @@
 {
-  "parent": "twilightforest:root",
+  "parent": "twilightmoonshine:root",
   "criteria": {
     "feed_moon_rabbit": {
       "conditions": {

@@ -1,0 +1,33 @@
+{
+  "display": {
+    "icon": {
+      "id": "twilightmoonshine:moon_rabbit_trophy"
+    },
+    "title": {
+      "translate": "advancement.twilightmoonshine.root"
+    },
+    "description": {
+      "translate": "advancement.twilightmoonshine.root.desc"
+    },
+    "background": "minecraft:textures/block/obsidian.png",
+    "show_toast": true,
+    "announce_to_chat": false
+  },
+  "criteria": {
+    "in_lake": {
+      "trigger": "minecraft:location",
+      "conditions": {
+        "player": {
+          "location": {
+            "biomes": "twilightforest:lake"
+          }
+        }
+      }
+    }
+  },
+  "requirements": [
+    [
+      "in_lake"
+    ]
+  ]
+}
