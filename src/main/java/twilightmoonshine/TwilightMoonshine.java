@@ -14,6 +14,7 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.SpawnEggItem;
@@ -21,6 +22,9 @@ import net.minecraft.world.item.StandingAndWallBlockItem;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.SlabBlock;
+import net.minecraft.world.level.block.StairBlock;
+import net.minecraft.world.level.block.WallBlock;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.levelgen.structure.StructureType;
@@ -95,6 +99,24 @@ public class TwilightMoonshine {
     public static final DeferredHolder<Block, MoonRabbitTrophyWallBlock> MOON_RABBIT_WALL_TROPHY_BLOCK =
         BLOCKS.register("moon_rabbit_wall_trophy", () -> new MoonRabbitTrophyWallBlock(BlockBehaviour.Properties.of().instabreak()));
 
+    // --- Moon stone family（月石碎片熔合的建筑方块，材质为占位图，后续替换）---
+    public static final DeferredHolder<Block, Block> MOON_STONE =
+        BLOCKS.register("moon_stone", () -> new Block(BlockBehaviour.Properties.of()
+            .strength(1.5F, 6.0F)
+            .requiresCorrectToolForDrops()));
+
+    public static final DeferredHolder<Block, StairBlock> MOON_STONE_STAIRS =
+        BLOCKS.register("moon_stone_stairs", () -> new StairBlock(MOON_STONE.get().defaultBlockState(),
+            BlockBehaviour.Properties.of().strength(1.5F, 6.0F).requiresCorrectToolForDrops()));
+
+    public static final DeferredHolder<Block, SlabBlock> MOON_STONE_SLAB =
+        BLOCKS.register("moon_stone_slab", () -> new SlabBlock(BlockBehaviour.Properties.of()
+            .strength(1.5F, 6.0F).requiresCorrectToolForDrops()));
+
+    public static final DeferredHolder<Block, WallBlock> MOON_STONE_WALL =
+        BLOCKS.register("moon_stone_wall", () -> new WallBlock(BlockBehaviour.Properties.of()
+            .strength(1.5F, 6.0F).requiresCorrectToolForDrops()));
+
     // --- Block entities ---
     public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES =
         DeferredRegister.create(Registries.BLOCK_ENTITY_TYPE, MODID);
@@ -125,6 +147,19 @@ public class TwilightMoonshine {
         ITEMS.register("moon_rabbit_trophy", () -> new StandingAndWallBlockItem(
             MOON_RABBIT_TROPHY_BLOCK.get(), MOON_RABBIT_WALL_TROPHY_BLOCK.get(),
             new Item.Properties(), Direction.DOWN));
+
+    // --- Moon stone family items ---
+    public static final DeferredHolder<Item, BlockItem> MOON_STONE_ITEM =
+        ITEMS.register("moon_stone", () -> new BlockItem(MOON_STONE.get(), new Item.Properties()));
+
+    public static final DeferredHolder<Item, BlockItem> MOON_STONE_STAIRS_ITEM =
+        ITEMS.register("moon_stone_stairs", () -> new BlockItem(MOON_STONE_STAIRS.get(), new Item.Properties()));
+
+    public static final DeferredHolder<Item, BlockItem> MOON_STONE_SLAB_ITEM =
+        ITEMS.register("moon_stone_slab", () -> new BlockItem(MOON_STONE_SLAB.get(), new Item.Properties()));
+
+    public static final DeferredHolder<Item, BlockItem> MOON_STONE_WALL_ITEM =
+        ITEMS.register("moon_stone_wall", () -> new BlockItem(MOON_STONE_WALL.get(), new Item.Properties()));
 
     // --- Spawn eggs ---
     public static final DeferredRegister<Item> SPAWN_EGGS =
@@ -218,6 +253,16 @@ public class TwilightMoonshine {
     public static final DeferredHolder<SoundEvent, SoundEvent> MOON_RABBIT_JUMP =
         SOUNDS.register("moon_rabbit.jump", () -> SoundEvent.createVariableRangeEvent(
             ResourceLocation.fromNamespaceAndPath(MODID, "moon_rabbit.jump")));
+
+    // 喷嚏前兆：复用原版熊猫吸气音频（准备打喷嚏阶段播放）
+    public static final DeferredHolder<SoundEvent, SoundEvent> MOON_RABBIT_PRE_SNEEZE =
+        SOUNDS.register("moon_rabbit.pre_sneeze", () -> SoundEvent.createVariableRangeEvent(
+            ResourceLocation.fromNamespaceAndPath(MODID, "moon_rabbit.pre_sneeze")));
+
+    // 打喷嚏：复用原版熊猫打喷嚏音频，仅在喷出物品时播放，字幕显示"月兔：打喷嚏"
+    public static final DeferredHolder<SoundEvent, SoundEvent> MOON_RABBIT_SNEEZE =
+        SOUNDS.register("moon_rabbit.sneeze", () -> SoundEvent.createVariableRangeEvent(
+            ResourceLocation.fromNamespaceAndPath(MODID, "moon_rabbit.sneeze")));
 
     public TwilightMoonshine(IEventBus modEventBus, ModContainer container) {
         container.registerConfig(ModConfig.Type.COMMON, Config.SPEC);

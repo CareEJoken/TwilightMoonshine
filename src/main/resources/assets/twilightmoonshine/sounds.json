@@ -14,5 +14,13 @@
   "moon_rabbit.jump": {
     "subtitle": "subtitles.twilightmoonshine.moon_rabbit.jump",
     "sounds": ["minecraft:mob/rabbit/hop1", "minecraft:mob/rabbit/hop2", "minecraft:mob/rabbit/hop3", "minecraft:mob/rabbit/hop4"]
+  },
+  "moon_rabbit.sneeze": {
+    "subtitle": "subtitles.twilightmoonshine.moon_rabbit.sneeze",
+    "sounds": ["minecraft:mob/panda/sneeze1", "minecraft:mob/panda/sneeze2", "minecraft:mob/panda/sneeze3"]
+  },
+  "moon_rabbit.pre_sneeze": {
+    "subtitle": "subtitles.twilightmoonshine.moon_rabbit.pre_sneeze",
+    "sounds": ["minecraft:mob/panda/pre_sneeze"]
   }
 }
