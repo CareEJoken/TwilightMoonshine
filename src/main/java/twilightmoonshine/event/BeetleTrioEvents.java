@@ -32,10 +32,10 @@ import twilightmoonshine.TwilightMoonshine;
 
 /**
  * 夕阳甲虫乐队的"三重奏"演出（仅服务端，宽松触发）：
- * 只要某台唱片机在播放，且粘液甲虫、喷火甲虫、巨型钳虫各至少 1 只出现在它附近 6 格内，
+ * 只要某台唱片机在播放，且黏液甲虫、喷火甲虫、巨钳甲虫各至少 1 只出现在它附近 6 格内，
  * 三只甲虫就以该唱片机为舞台就地演出：
  * - 三只虫错开一拍轮流叫唤，偶尔穿插自己的叫声（不再回放音符盒乐器声，唱片机的音乐就是配乐）；
- * - 轮到的那只虫在节拍上原地小跳一下，头顶冒出自己颜色的粒子（粘液=绿、喷火=橙、钳虫=蓝）；
+ * - 轮到的那只虫在节拍上原地小跳一下，头顶冒出自己颜色的粒子（黏液=绿、喷火=橙、钳虫=蓝）；
  * - 演出期间虫子停下寻路与攻击，整只虫（含身体）旋转面向唱片机，按节拍上下弹跳；
  * - 唱片停、虫死/走远或区块卸载即散场。
  * 不需要玩家参与，也不依赖暮色之拥（进度判定在 EmbraceAdvancementEvents 里另行检查）。
@@ -65,7 +65,7 @@ public class BeetleTrioEvents {
     private static final SoundEvent PINCH_AMBIENT = tfSound("entity.twilightforest.pinch_beetle.ambient");
 
     /**
-     * 三个声部（与乐队成员顺序一致：0=粘液低音、1=喷火铃铛、2=钳虫拨弦）。
+     * 三个声部（与乐队成员顺序一致：0=黏液低音、1=喷火铃铛、2=钳虫拨弦）。
      * 只保留粒子颜色与各自的叫声，不再回放音符盒乐器声。
      */
     private static final SpeciesPart[] PARTS = {
@@ -199,7 +199,7 @@ public class BeetleTrioEvents {
             return entity.isAlive() && entity.distanceToSqr(center) <= maxDistSqr;
         }
 
-        /** 按声部顺序取成员：0=粘液、1=喷火、2=钳虫 */
+        /** 按声部顺序取成员：0=黏液、1=喷火、2=钳虫 */
         Entity member(int index) {
             return switch (index) {
                 case 0 -> slime;

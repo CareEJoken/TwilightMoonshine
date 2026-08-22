@@ -1,0 +1,33 @@
+{
+  "parent": "twilightmoonshine:hand_to_hand",
+  "display": {
+    "icon": {
+      "id": "twilightmoonshine:moonshine"
+    },
+    "title": {
+      "translate": "advancement.twilightmoonshine.coolidge_family"
+    },
+    "description": {
+      "translate": "advancement.twilightmoonshine.coolidge_family.desc"
+    },
+    "show_toast": true,
+    "announce_to_chat": true
+  },
+  "criteria": {
+    "drink_moonshine": {
+      "trigger": "minecraft:consume_item",
+      "conditions": {
+        "item": {
+          "items": [
+            "twilightmoonshine:moonshine"
+          ]
+        }
+      }
+    }
+  },
+  "requirements": [
+    [
+      "drink_moonshine"
+    ]
+  ]
+}

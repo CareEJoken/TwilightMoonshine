@@ -1,0 +1,32 @@
+{
+  "parent": "twilightmoonshine:embrace_day",
+  "display": {
+    "icon": {
+      "count": 1,
+      "id": "minecraft:potion",
+      "components": {
+        "minecraft:potion_contents": {
+          "potion": "twilightmoonshine:glow"
+        }
+      }
+    },
+    "title": {
+      "translate": "advancement.twilightmoonshine.river_of_light"
+    },
+    "description": {
+      "translate": "advancement.twilightmoonshine.river_of_light.desc"
+    },
+    "show_toast": true,
+    "announce_to_chat": true
+  },
+  "criteria": {
+    "approach_lure_mob": {
+      "trigger": "twilightmoonshine:lure_approach"
+    }
+  },
+  "requirements": [
+    [
+      "approach_lure_mob"
+    ]
+  ]
+}

@@ -69,6 +69,8 @@ public class MoonRabbit extends Rabbit {
 
     /** 喂到 4 级的玩家：喷嚏战利品里喷出的配方给这位玩家（喷嚏结束后清空，随 NBT 存档） */
     private UUID recipeFeeder;
+    /** 是否已经打过第一次喷嚏：第一次必喷出神秘书页，之后回归 50% 概率（随 NBT 存档） */
+    private boolean firstSneezeDone;
 
     @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
@@ -159,6 +161,10 @@ public class MoonRabbit extends Rabbit {
             this.setInflateLevel(newLevel);
             this.playSound(this.getEatingSound(stack), 1.0F, 1.0F);
             stack.consume(1, player);
+            // 跺跺脚！：喂食让月兔变大即触发（喂到任意新等级）
+            if (player instanceof ServerPlayer serverPlayer) {
+                TwilightMoonshine.MOON_RABBIT_INFLATE_TRIGGER.get().trigger(serverPlayer);
+            }
             if (newLevel >= MAX_LEVEL) {
                 // 记下喂到 4 级的玩家：配方实际喷出在喷嚏战利品里（doSneeze / spawnSneezeLoot）
                 if (player instanceof ServerPlayer serverPlayer) {
@@ -203,7 +209,7 @@ public class MoonRabbit extends Rabbit {
     }
 
     // 战利品：固定 40% 粘液球 0~2 个，60% 月石碎片 1~3 个；
-    // 另有一次 50% 的战利品——暮色植物萃取液配方（喷给喂到 4 级的玩家，已掌握则不会再给）
+    // 另有一次 50% 的战利品——"神秘书页"（喷给喂到 4 级的玩家，右键翻开才解锁配方；已掌握则不会再给）
     private void spawnSneezeLoot() {
         RandomSource random = this.getRandom();
         ItemStack loot;
@@ -221,13 +227,16 @@ public class MoonRabbit extends Rabbit {
                 (random.nextDouble() - 0.5) * 0.3);
             this.level().addFreshEntity(item);
         }
-        // 配方战利品：喂到 4 级的玩家若还在线，就在喷嚏里掷一次概率
+        // 配方战利品：喂到 4 级的玩家若还在线，就由喷嚏掷出"神秘书页"（实物）。
+        // 第一次喷嚏必得（100%），之后回归 50% 概率；已掌握则不会再给
         if (this.recipeFeeder != null && this.level().getServer() != null) {
             ServerPlayer feeder = this.level().getServer().getPlayerList().getPlayer(this.recipeFeeder);
             if (feeder != null) {
-                RecipeKnowledge.grantIfChance(feeder, RecipeKnowledge.PLANT_EXTRACT, RECIPE_SNEEZE_CHANCE);
+                float chance = this.firstSneezeDone ? RECIPE_SNEEZE_CHANCE : 1.0F;
+                RecipeKnowledge.grantPageIfChance(feeder, RecipeKnowledge.PLANT_EXTRACT, chance);
             }
         }
+        this.firstSneezeDone = true;
         this.recipeFeeder = null;
     }
 
@@ -239,6 +248,7 @@ public class MoonRabbit extends Rabbit {
         if (this.recipeFeeder != null) {
             tag.putUUID("MoonRecipeFeeder", this.recipeFeeder);
         }
+        tag.putBoolean("MoonFirstSneeze", this.firstSneezeDone);
     }
 
     @Override
@@ -247,6 +257,7 @@ public class MoonRabbit extends Rabbit {
         this.entityData.set(DATA_LEVEL, (byte) Math.max(0, Math.min(MAX_LEVEL, tag.getByte("MoonInflateLevel"))));
         this.entityData.set(DATA_SNEEZE_TICKS, tag.getInt("MoonSneezeTicks"));
         this.recipeFeeder = tag.hasUUID("MoonRecipeFeeder") ? tag.getUUID("MoonRecipeFeeder") : null;
+        this.firstSneezeDone = tag.getBoolean("MoonFirstSneeze");
     }
 
     @Override

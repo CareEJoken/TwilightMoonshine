@@ -21,9 +21,16 @@ public class BrewingSetup {
             TwilightMoonshine.FAINTLY_GLOWING_POTION
         );
 
-        // 微微发亮的药水 + 荧光精华 → 荧光药水
+        // 微微发亮的药水 + 荧光精华 → 荧光药水（粗制的药水也可作基底，见下方）
         event.getBuilder().addMix(
             TwilightMoonshine.FAINTLY_GLOWING_POTION,
+            TwilightMoonshine.GLOW_ESSENCE.get(),
+            TwilightMoonshine.GLOW_POTION
+        );
+
+        // 粗制的药水 + 荧光精华 → 荧光药水（微微发亮的药水不再是必需基底）
+        event.getBuilder().addMix(
+            Potions.AWKWARD,
             TwilightMoonshine.GLOW_ESSENCE.get(),
             TwilightMoonshine.GLOW_POTION
         );
@@ -35,9 +42,16 @@ public class BrewingSetup {
             TwilightMoonshine.LONG_GLOW_POTION
         );
 
-        // 微微发亮的药水 + 暮色植物萃取液 → 暮色药水
+        // 微微发亮的药水 + 暮色植物萃取液 → 暮色药水（粗制的药水也可作基底，见下方）
         event.getBuilder().addMix(
             TwilightMoonshine.FAINTLY_GLOWING_POTION,
+            TwilightMoonshine.TWILIGHT_PLANT_EXTRACT.get(),
+            TwilightMoonshine.TWILIGHT_POTION
+        );
+
+        // 粗制的药水 + 暮色植物萃取液 → 暮色药水
+        event.getBuilder().addMix(
+            Potions.AWKWARD,
             TwilightMoonshine.TWILIGHT_PLANT_EXTRACT.get(),
             TwilightMoonshine.TWILIGHT_POTION
         );

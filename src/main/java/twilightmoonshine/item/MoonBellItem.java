@@ -2,12 +2,14 @@ package twilightmoonshine.item;
 
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import twilightmoonshine.TwilightMoonshine;
 import twilightmoonshine.moonlight.MoonlightState;
 import twilightmoonshine.moonlight.MoonlightSyncPayload;
 import twilightmoonshine.moonlight.MoonlightWorldData;
@@ -44,7 +46,10 @@ public class MoonBellItem extends Item {
         player.displayClientMessage(Component.translatable(
             nowActive ? "item.twilightmoonshine.moon_bell.on" : "item.twilightmoonshine.moon_bell.off"), true);
         MoonlightSyncPayload.broadcast(serverLevel, nowActive);
-
+        // 满月终临：成功使用一次月之铃（启动/关闭月光都算一次摇铃）
+        if (player instanceof ServerPlayer serverPlayer) {
+            TwilightMoonshine.MOON_BELL_USED_TRIGGER.get().trigger(serverPlayer);
+        }
         return InteractionResultHolder.consume(stack);
     }
 }

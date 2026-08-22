@@ -38,6 +38,7 @@ import net.neoforged.fml.config.ModConfig;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import org.slf4j.Logger;
+import twilightmoonshine.advancement.BossGlowingTrigger;
 import twilightmoonshine.advancement.EmbraceProximityTrigger;
 import twilightmoonshine.advancement.RecipeLearnedTrigger;
 import twilightmoonshine.block.MoonRabbitTrophyBlock;
@@ -48,6 +49,7 @@ import twilightmoonshine.effect.TwilightEmbraceEffect;
 import twilightmoonshine.entity.MoonRabbit;
 import twilightmoonshine.item.MoonBellItem;
 import twilightmoonshine.item.MoonshineItem;
+import twilightmoonshine.item.SecretPageItem;
 import twilightmoonshine.item.recipe.PotionArrowRecipe;
 import twilightmoonshine.item.recipe.SecretRecipe;
 import twilightmoonshine.structure.ProceduralQuestIslandPiece;
@@ -157,7 +159,12 @@ public class TwilightMoonshine {
     public static final DeferredHolder<Item, Item> TWILIGHT_ALLOY =
         ITEMS.register("twilight_alloy", () -> new Item(new Item.Properties()));
 
-    // 喷火甲虫图标物品：仅用作"夕阳甲虫乐队"进度图标，ISTER 渲染 TF 喷火甲虫 3D 模型
+    // 神秘书页：秘密配方渠道的实物奖励（月兔喷嚏 / 吸引动物 / 荧光引路），
+    // 右键翻开后消耗并解锁一张配方（绑定配方存在 custom_data，见 SecretPageItem）
+    public static final DeferredHolder<Item, SecretPageItem> SECRET_PAGE =
+        ITEMS.register("secret_page", () -> new SecretPageItem(new Item.Properties().stacksTo(16)));
+
+    // 喷火甲虫图标物品：仅用作"夕阳甲虫派对"进度图标，ISTER 渲染 TF 喷火甲虫 3D 模型
     public static final DeferredHolder<Item, Item> FIRE_BEETLE_ICON =
         ITEMS.register("fire_beetle_icon", () -> new Item(new Item.Properties()));
 
@@ -273,7 +280,7 @@ public class TwilightMoonshine {
     public static final DeferredHolder<CriterionTrigger<?>, EmbraceProximityTrigger> EMBRACE_HUG_TRIGGER =
         CRITERION_TRIGGERS.register("embrace_hug", EmbraceProximityTrigger::new);
 
-    // 可爱的暮色虫子们：暮色之拥效果下，周围 4 格内同时存在粘液甲虫、喷火甲虫、巨型钳虫
+    // 夕阳甲虫派对：周围 4 格内同时存在黏液甲虫、喷火甲虫、巨钳甲虫 + 6 格内唱机（无需暮色之拥）
     public static final DeferredHolder<CriterionTrigger<?>, EmbraceProximityTrigger> EMBRACE_BEETLES_TRIGGER =
         CRITERION_TRIGGERS.register("embrace_beetles", EmbraceProximityTrigger::new);
 
@@ -281,6 +288,22 @@ public class TwilightMoonshine {
     // 由 RecipeKnowledge.grant 触发，用于引诱式获取渠道的进度（手手相传 / 荧光引路）
     public static final DeferredHolder<CriterionTrigger<?>, RecipeLearnedTrigger> RECIPE_LEARNED_TRIGGER =
         CRITERION_TRIGGERS.register("recipe_learned", RecipeLearnedTrigger::new);
+
+    // 跺跺脚！：喂食月兔把它变大（MoonRabbit.mobInteract 喂到任意新等级时触发）
+    public static final DeferredHolder<CriterionTrigger<?>, EmbraceProximityTrigger> MOON_RABBIT_INFLATE_TRIGGER =
+        CRITERION_TRIGGERS.register("moon_rabbit_inflate", EmbraceProximityTrigger::new);
+
+    // 满月终临：在暮色森林中成功使用一次月之铃（MoonBellItem.use 服务端分支）
+    public static final DeferredHolder<CriterionTrigger<?>, EmbraceProximityTrigger> MOON_BELL_USED_TRIGGER =
+        CRITERION_TRIGGERS.register("moon_bell_used", EmbraceProximityTrigger::new);
+
+    // 光之川：发光状态下靠近迷雾狼/游魂 4 格内（RecipeLearningEvents.checkAlloyFromLuredMobs 纯靠近判据）
+    public static final DeferredHolder<CriterionTrigger<?>, EmbraceProximityTrigger> LURE_APPROACH_TRIGGER =
+        CRITERION_TRIGGERS.register("lure_approach", EmbraceProximityTrigger::new);
+
+    // 暮色岗哨守卫：某只暮色 Boss 获得发光效果（BossGlowEvents；判据 conditions.boss = Boss 实体注册名）
+    public static final DeferredHolder<CriterionTrigger<?>, BossGlowingTrigger> BOSS_GLOWING_TRIGGER =
+        CRITERION_TRIGGERS.register("boss_glowing", BossGlowingTrigger::new);
 
     // --- Sounds（字幕显示"月兔：XXX"）---
     public static final DeferredRegister<SoundEvent> SOUNDS =

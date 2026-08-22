@@ -18,9 +18,9 @@ import twilightmoonshine.TwilightMoonshine;
 /**
  * 暮色之拥相关进度检测（仅服务端玩家 tick 时检查）：
  * - 拥抱日（embrace_hug）：效果生效时，周围 1 格内聚集 10 只暮色森林被动生物
- * - 可爱的暮色虫子们（embrace_beetles）：效果生效时，周围 4 格内
- *   同时存在粘液甲虫、喷火甲虫、巨型钳虫各至少 1 只，
- *   且周围 6 格内有正在播放的唱片机
+ * - 夕阳甲虫派对（embrace_beetles）：周围 4 格内
+ *   同时存在黏液甲虫、喷火甲虫、巨钳甲虫各至少 1 只，
+ *   且周围 6 格内有正在播放的唱片机（无需暮色之拥）
  * 满足条件即触发对应判据（触发器见 EmbraceProximityTrigger）。
  */
 @EventBusSubscriber(modid = TwilightMoonshine.MODID, bus = EventBusSubscriber.Bus.GAME)
@@ -29,7 +29,7 @@ public class EmbraceAdvancementEvents {
     /** 拥抱日：需要的生物数量和判定半径（方块） */
     private static final int HUG_COUNT = 10;
     private static final double HUG_RANGE = 1.0;
-    /** 虫子们：判定半径（方块） */
+    /** 甲虫派对：判定半径（方块） */
     private static final double BEETLE_RANGE = 4.0;
     /** 唱片机：判定半径（方块） */
     private static final double JUKEBOX_RANGE = 6.0;
@@ -45,7 +45,6 @@ public class EmbraceAdvancementEvents {
     public static void onPlayerTick(PlayerTickEvent.Post event) {
         // Post 在客户端也会触发，instanceof ServerPlayer 直接过滤掉客户端
         if (!(event.getEntity() instanceof ServerPlayer player)) return;
-        if (!player.hasEffect(TwilightMoonshine.TWILIGHT_EMBRACE)) return;
 
         checkEmbraceHug(player);
         checkEmbraceBeetles(player);
@@ -53,6 +52,7 @@ public class EmbraceAdvancementEvents {
 
     /** 拥抱日：暮色之拥 + 1 格内 10 只暮色森林被动生物（Animal 且 twilightforest 命名空间） */
     private static void checkEmbraceHug(ServerPlayer player) {
+        if (!player.hasEffect(TwilightMoonshine.TWILIGHT_EMBRACE)) return;
         AABB box = player.getBoundingBox().inflate(HUG_RANGE);
         int count = player.level().getEntitiesOfClass(Animal.class, box,
             e -> e.isAlive() && TwilightEmbraceEvents.isTwilightMob(e)).size();
@@ -61,7 +61,7 @@ public class EmbraceAdvancementEvents {
         }
     }
 
-    /** 虫子们：暮色之拥 + 4 格内三种暮色甲虫各至少 1 只 + 6 格内正在播放的唱片机 */
+    /** 甲虫派对：4 格内三种暮色甲虫各至少 1 只 + 6 格内正在播放的唱片机（无需暮色之拥） */
     private static void checkEmbraceBeetles(ServerPlayer player) {
         AABB box = player.getBoundingBox().inflate(BEETLE_RANGE);
         boolean slime = false, fire = false, pinch = false;

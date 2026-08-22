@@ -7,7 +7,10 @@
           "type": "twilightmoonshine:moon_rabbit"
         },
         "item": {
-          "items": "minecraft:carrot"
+          "items": [
+            "minecraft:carrot",
+            "minecraft:golden_carrot"
+          ]
         }
       },
       "trigger": "minecraft:player_interacted_with_entity"

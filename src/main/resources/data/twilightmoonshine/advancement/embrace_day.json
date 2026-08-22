@@ -1,5 +1,5 @@
 {
-  "parent": "twilightmoonshine:root",
+  "parent": "twilightmoonshine:stomp_stomp",
   "display": {
     "icon": {
       "id": "twilightforest:fiddlehead"

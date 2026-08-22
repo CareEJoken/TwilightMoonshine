@@ -1,26 +1,26 @@
 {
-  "parent": "twilightmoonshine:root",
+  "parent": "twilightmoonshine:stomp_stomp",
   "display": {
     "icon": {
       "id": "twilightmoonshine:fire_beetle_icon"
     },
     "title": {
-      "translate": "advancement.twilightmoonshine.embrace_beetles"
+      "translate": "advancement.twilightmoonshine.sunset_beetle_party"
     },
     "description": {
-      "translate": "advancement.twilightmoonshine.embrace_beetles.desc"
+      "translate": "advancement.twilightmoonshine.sunset_beetle_party.desc"
     },
     "show_toast": true,
     "announce_to_chat": true
   },
   "criteria": {
-    "embrace_beetles": {
+    "beetle_party": {
       "trigger": "twilightmoonshine:embrace_beetles"
     }
   },
   "requirements": [
     [
-      "embrace_beetles"
+      "beetle_party"
     ]
   ]
 }

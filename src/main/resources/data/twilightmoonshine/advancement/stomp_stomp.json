@@ -1,0 +1,26 @@
+{
+  "parent": "twilightmoonshine:root",
+  "display": {
+    "icon": {
+      "id": "minecraft:rabbit_foot"
+    },
+    "title": {
+      "translate": "advancement.twilightmoonshine.stomp_stomp"
+    },
+    "description": {
+      "translate": "advancement.twilightmoonshine.stomp_stomp.desc"
+    },
+    "show_toast": true,
+    "announce_to_chat": true
+  },
+  "criteria": {
+    "inflate": {
+      "trigger": "twilightmoonshine:moon_rabbit_inflate"
+    }
+  },
+  "requirements": [
+    [
+      "inflate"
+    ]
+  ]
+}

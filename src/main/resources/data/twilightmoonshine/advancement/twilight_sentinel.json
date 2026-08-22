@@ -1,0 +1,93 @@
+{
+  "parent": "twilightmoonshine:embrace_day",
+  "display": {
+    "icon": {
+      "count": 1,
+      "id": "twilightforest:naga_trophy"
+    },
+    "title": {
+      "translate": "advancement.twilightmoonshine.twilight_sentinel"
+    },
+    "description": {
+      "translate": "advancement.twilightmoonshine.twilight_sentinel.desc"
+    },
+    "show_toast": true,
+    "announce_to_chat": true
+  },
+  "criteria": {
+    "glow_naga": {
+      "trigger": "twilightmoonshine:boss_glowing",
+      "conditions": {
+        "boss": "twilightforest:naga"
+      }
+    },
+    "glow_lich": {
+      "trigger": "twilightmoonshine:boss_glowing",
+      "conditions": {
+        "boss": "twilightforest:lich"
+      }
+    },
+    "glow_minotaur": {
+      "trigger": "twilightmoonshine:boss_glowing",
+      "conditions": {
+        "boss": "twilightforest:minotaur"
+      }
+    },
+    "glow_hydra": {
+      "trigger": "twilightmoonshine:boss_glowing",
+      "conditions": {
+        "boss": "twilightforest:hydra"
+      }
+    },
+    "glow_yeti": {
+      "trigger": "twilightmoonshine:boss_glowing",
+      "conditions": {
+        "boss": "twilightforest:yeti"
+      }
+    },
+    "glow_snow_queen": {
+      "trigger": "twilightmoonshine:boss_glowing",
+      "conditions": {
+        "boss": "twilightforest:snow_queen"
+      }
+    },
+    "glow_knight_phantom": {
+      "trigger": "twilightmoonshine:boss_glowing",
+      "conditions": {
+        "boss": "twilightforest:knight_phantom"
+      }
+    },
+    "glow_ur_ghast": {
+      "trigger": "twilightmoonshine:boss_glowing",
+      "conditions": {
+        "boss": "twilightforest:ur_ghast"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "glow_naga"
+    ],
+    [
+      "glow_lich"
+    ],
+    [
+      "glow_minotaur"
+    ],
+    [
+      "glow_hydra"
+    ],
+    [
+      "glow_yeti"
+    ],
+    [
+      "glow_snow_queen"
+    ],
+    [
+      "glow_knight_phantom"
+    ],
+    [
+      "glow_ur_ghast"
+    ]
+  ]
+}

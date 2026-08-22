@@ -1,8 +1,8 @@
 {
-  "parent": "twilightmoonshine:glow_allure",
+  "parent": "twilightmoonshine:root",
   "display": {
     "icon": {
-      "id": "twilightmoonshine:moonshine"
+      "id": "minecraft:paper"
     },
     "title": {
       "translate": "advancement.twilightmoonshine.hand_to_hand"
@@ -14,40 +14,153 @@
     "announce_to_chat": true
   },
   "criteria": {
-    "learn_extract_recipe": {
-      "trigger": "twilightmoonshine:recipe_learned",
+    "twilight_potion": {
+      "trigger": "minecraft:inventory_changed",
       "conditions": {
-        "recipes": [
-          "twilightmoonshine:twilight_plant_extract"
+        "items": [
+          {
+            "items": [
+              "minecraft:potion",
+              "minecraft:splash_potion",
+              "minecraft:lingering_potion"
+            ],
+            "components": {
+              "minecraft:potion_contents": {
+                "potion": "twilightmoonshine:twilight"
+              }
+            }
+          }
         ]
       }
     },
-    "learn_essence_recipe": {
-      "trigger": "twilightmoonshine:recipe_learned",
+    "long_twilight_potion": {
+      "trigger": "minecraft:inventory_changed",
       "conditions": {
-        "recipes": [
-          "twilightmoonshine:twilight_glow_essence"
+        "items": [
+          {
+            "items": [
+              "minecraft:potion",
+              "minecraft:splash_potion",
+              "minecraft:lingering_potion"
+            ],
+            "components": {
+              "minecraft:potion_contents": {
+                "potion": "twilightmoonshine:long_twilight"
+              }
+            }
+          }
         ]
       }
     },
-    "learn_alloy_recipe": {
-      "trigger": "twilightmoonshine:recipe_learned",
+    "glow_potion": {
+      "trigger": "minecraft:inventory_changed",
       "conditions": {
-        "recipes": [
-          "twilightmoonshine:twilight_alloy"
+        "items": [
+          {
+            "items": [
+              "minecraft:potion",
+              "minecraft:splash_potion",
+              "minecraft:lingering_potion"
+            ],
+            "components": {
+              "minecraft:potion_contents": {
+                "potion": "twilightmoonshine:glow"
+              }
+            }
+          }
+        ]
+      }
+    },
+    "long_glow_potion": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:potion",
+              "minecraft:splash_potion",
+              "minecraft:lingering_potion"
+            ],
+            "components": {
+              "minecraft:potion_contents": {
+                "potion": "twilightmoonshine:long_glow"
+              }
+            }
+          }
+        ]
+      }
+    },
+    "resistance_potion": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:potion",
+              "minecraft:splash_potion",
+              "minecraft:lingering_potion"
+            ],
+            "components": {
+              "minecraft:potion_contents": {
+                "potion": "twilightmoonshine:resistance"
+              }
+            }
+          }
+        ]
+      }
+    },
+    "long_resistance_potion": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:potion",
+              "minecraft:splash_potion",
+              "minecraft:lingering_potion"
+            ],
+            "components": {
+              "minecraft:potion_contents": {
+                "potion": "twilightmoonshine:long_resistance"
+              }
+            }
+          }
+        ]
+      }
+    },
+    "strong_resistance_potion": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:potion",
+              "minecraft:splash_potion",
+              "minecraft:lingering_potion"
+            ],
+            "components": {
+              "minecraft:potion_contents": {
+                "potion": "twilightmoonshine:strong_resistance"
+              }
+            }
+          }
         ]
       }
     }
   },
   "requirements": [
     [
-      "learn_extract_recipe"
+      "twilight_potion",
+      "long_twilight_potion"
     ],
     [
-      "learn_essence_recipe"
+      "glow_potion",
+      "long_glow_potion"
     ],
     [
-      "learn_alloy_recipe"
+      "resistance_potion",
+      "long_resistance_potion",
+      "strong_resistance_potion"
     ]
   ]
 }
