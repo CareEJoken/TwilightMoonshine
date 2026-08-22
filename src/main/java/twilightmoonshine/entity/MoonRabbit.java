@@ -1,5 +1,6 @@
 package twilightmoonshine.entity;
 
+import java.util.UUID;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ParticleTypes;
@@ -7,6 +8,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
@@ -33,6 +35,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.pathfinder.Path;
 import twilightmoonshine.TwilightMoonshine;
+import twilightmoonshine.data.RecipeKnowledge;
 
 public class MoonRabbit extends Rabbit {
 
@@ -51,6 +54,8 @@ public class MoonRabbit extends Rabbit {
     public static final int MAX_LEVEL = 4;
     public static final int SNEEZE_DELAY_TICKS = 40; // 2 秒
     private static final float SLIME_BALL_CHANCE = 0.4F; // 固定 40% 粘液球，60% 月石碎片
+    /** 喷嚏战利品中喷出暮色植物萃取液配方的概率（已掌握则不会再给） */
+    private static final float RECIPE_SNEEZE_CHANCE = 0.5F;
 
     private static final EntityDataAccessor<Byte> DATA_LEVEL =
         SynchedEntityData.defineId(MoonRabbit.class, EntityDataSerializers.BYTE);
@@ -61,6 +66,9 @@ public class MoonRabbit extends Rabbit {
     // prevAnimScale 为上一 tick 的值，渲染时按帧 partialTick 在两者间插值
     private float prevAnimScale = 1.0F;
     private float animScale = 1.0F;
+
+    /** 喂到 4 级的玩家：喷嚏战利品里喷出的配方给这位玩家（喷嚏结束后清空，随 NBT 存档） */
+    private UUID recipeFeeder;
 
     @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
@@ -146,11 +154,16 @@ public class MoonRabbit extends Rabbit {
             if (this.getInflateLevel() >= MAX_LEVEL || this.getSneezeTicks() > 0) {
                 return InteractionResult.PASS;
             }
-            int newLevel = Math.min(MAX_LEVEL, this.getInflateLevel() + 1 + this.random.nextInt(2)); // 每次 +1~2 级
+            int oldLevel = this.getInflateLevel();
+            int newLevel = Math.min(MAX_LEVEL, oldLevel + 1 + this.random.nextInt(2)); // 每次 +1~2 级
             this.setInflateLevel(newLevel);
             this.playSound(this.getEatingSound(stack), 1.0F, 1.0F);
             stack.consume(1, player);
             if (newLevel >= MAX_LEVEL) {
+                // 记下喂到 4 级的玩家：配方实际喷出在喷嚏战利品里（doSneeze / spawnSneezeLoot）
+                if (player instanceof ServerPlayer serverPlayer) {
+                    this.recipeFeeder = serverPlayer.getUUID();
+                }
                 this.startSneezeSequence();
             }
             return InteractionResult.SUCCESS;
@@ -189,7 +202,8 @@ public class MoonRabbit extends Rabbit {
         this.setInflateLevel(0);
     }
 
-    // 战利品：固定 40% 粘液球 0~2 个，60% 月石碎片 1~3 个
+    // 战利品：固定 40% 粘液球 0~2 个，60% 月石碎片 1~3 个；
+    // 另有一次 50% 的战利品——暮色植物萃取液配方（喷给喂到 4 级的玩家，已掌握则不会再给）
     private void spawnSneezeLoot() {
         RandomSource random = this.getRandom();
         ItemStack loot;
@@ -198,16 +212,23 @@ public class MoonRabbit extends Rabbit {
         } else {
             loot = new ItemStack(TwilightMoonshine.MOON_STONE_SHARD.get(), 1 + random.nextInt(3)); // 1~3
         }
-        if (loot.isEmpty()) {
-            return; // 粘液球摇到 0 个
+        if (!loot.isEmpty()) {
+            ItemEntity item = new ItemEntity(this.level(), this.getX(),
+                this.getY() + this.getEyeHeight() * 0.8, this.getZ(), loot);
+            item.setDeltaMovement(
+                (random.nextDouble() - 0.5) * 0.3,
+                0.25 + random.nextDouble() * 0.15,
+                (random.nextDouble() - 0.5) * 0.3);
+            this.level().addFreshEntity(item);
         }
-        ItemEntity item = new ItemEntity(this.level(), this.getX(),
-            this.getY() + this.getEyeHeight() * 0.8, this.getZ(), loot);
-        item.setDeltaMovement(
-            (random.nextDouble() - 0.5) * 0.3,
-            0.25 + random.nextDouble() * 0.15,
-            (random.nextDouble() - 0.5) * 0.3);
-        this.level().addFreshEntity(item);
+        // 配方战利品：喂到 4 级的玩家若还在线，就在喷嚏里掷一次概率
+        if (this.recipeFeeder != null && this.level().getServer() != null) {
+            ServerPlayer feeder = this.level().getServer().getPlayerList().getPlayer(this.recipeFeeder);
+            if (feeder != null) {
+                RecipeKnowledge.grantIfChance(feeder, RecipeKnowledge.PLANT_EXTRACT, RECIPE_SNEEZE_CHANCE);
+            }
+        }
+        this.recipeFeeder = null;
     }
 
     @Override
@@ -215,6 +236,9 @@ public class MoonRabbit extends Rabbit {
         super.addAdditionalSaveData(tag);
         tag.putByte("MoonInflateLevel", (byte) this.getInflateLevel());
         tag.putInt("MoonSneezeTicks", this.getSneezeTicks());
+        if (this.recipeFeeder != null) {
+            tag.putUUID("MoonRecipeFeeder", this.recipeFeeder);
+        }
     }
 
     @Override
@@ -222,6 +246,7 @@ public class MoonRabbit extends Rabbit {
         super.readAdditionalSaveData(tag);
         this.entityData.set(DATA_LEVEL, (byte) Math.max(0, Math.min(MAX_LEVEL, tag.getByte("MoonInflateLevel"))));
         this.entityData.set(DATA_SNEEZE_TICKS, tag.getInt("MoonSneezeTicks"));
+        this.recipeFeeder = tag.hasUUID("MoonRecipeFeeder") ? tag.getUUID("MoonRecipeFeeder") : null;
     }
 
     @Override

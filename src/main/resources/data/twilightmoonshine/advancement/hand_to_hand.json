@@ -1,0 +1,53 @@
+{
+  "parent": "twilightmoonshine:glow_allure",
+  "display": {
+    "icon": {
+      "id": "twilightmoonshine:moonshine"
+    },
+    "title": {
+      "translate": "advancement.twilightmoonshine.hand_to_hand"
+    },
+    "description": {
+      "translate": "advancement.twilightmoonshine.hand_to_hand.desc"
+    },
+    "show_toast": true,
+    "announce_to_chat": true
+  },
+  "criteria": {
+    "learn_extract_recipe": {
+      "trigger": "twilightmoonshine:recipe_learned",
+      "conditions": {
+        "recipes": [
+          "twilightmoonshine:twilight_plant_extract"
+        ]
+      }
+    },
+    "learn_essence_recipe": {
+      "trigger": "twilightmoonshine:recipe_learned",
+      "conditions": {
+        "recipes": [
+          "twilightmoonshine:twilight_glow_essence"
+        ]
+      }
+    },
+    "learn_alloy_recipe": {
+      "trigger": "twilightmoonshine:recipe_learned",
+      "conditions": {
+        "recipes": [
+          "twilightmoonshine:twilight_alloy"
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "learn_extract_recipe"
+    ],
+    [
+      "learn_essence_recipe"
+    ],
+    [
+      "learn_alloy_recipe"
+    ]
+  ]
+}

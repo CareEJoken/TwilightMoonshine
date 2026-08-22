@@ -1,6 +1,7 @@
 package twilightmoonshine;
 
 import com.mojang.logging.LogUtils;
+import net.minecraft.advancements.CriterionTrigger;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -37,6 +38,8 @@ import net.neoforged.fml.config.ModConfig;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import org.slf4j.Logger;
+import twilightmoonshine.advancement.EmbraceProximityTrigger;
+import twilightmoonshine.advancement.RecipeLearnedTrigger;
 import twilightmoonshine.block.MoonRabbitTrophyBlock;
 import twilightmoonshine.block.MoonRabbitTrophyWallBlock;
 import twilightmoonshine.block.entity.MoonRabbitTrophyBlockEntity;
@@ -44,7 +47,9 @@ import twilightmoonshine.config.Config;
 import twilightmoonshine.effect.TwilightEmbraceEffect;
 import twilightmoonshine.entity.MoonRabbit;
 import twilightmoonshine.item.MoonBellItem;
+import twilightmoonshine.item.MoonshineItem;
 import twilightmoonshine.item.recipe.PotionArrowRecipe;
+import twilightmoonshine.item.recipe.SecretRecipe;
 import twilightmoonshine.structure.ProceduralQuestIslandPiece;
 import twilightmoonshine.structure.QuestIslandPiece;
 import twilightmoonshine.structure.QuestIslandStructure;
@@ -107,7 +112,8 @@ public class TwilightMoonshine {
 
     public static final DeferredHolder<Block, StairBlock> MOON_STONE_STAIRS =
         BLOCKS.register("moon_stone_stairs", () -> new StairBlock(MOON_STONE.get().defaultBlockState(),
-            BlockBehaviour.Properties.of().strength(1.5F, 6.0F).requiresCorrectToolForDrops()));
+            BlockBehaviour.Properties.of()
+                .strength(1.5F, 6.0F).requiresCorrectToolForDrops()));
 
     public static final DeferredHolder<Block, SlabBlock> MOON_STONE_SLAB =
         BLOCKS.register("moon_stone_slab", () -> new SlabBlock(BlockBehaviour.Properties.of()
@@ -134,7 +140,7 @@ public class TwilightMoonshine {
         ITEMS.register("moon_stone_shard", () -> new Item(new Item.Properties()));
 
     public static final DeferredHolder<Item, Item> GLOW_ESSENCE =
-        ITEMS.register("glow_essence", () -> new Item(new Item.Properties()));
+        ITEMS.register("twilight_glow_essence", () -> new Item(new Item.Properties()));
 
     public static final DeferredHolder<Item, Item> TWILIGHT_PLANT_EXTRACT =
         ITEMS.register("twilight_plant_extract", () -> new Item(new Item.Properties()));
@@ -142,6 +148,18 @@ public class TwilightMoonshine {
     // 月之铃：右键切换暮色森林"月光"（月亮出现 + 天光提升）
     public static final DeferredHolder<Item, Item> MOON_BELL =
         ITEMS.register("moon_bell", () -> new MoonBellItem(new Item.Properties().stacksTo(1)));
+
+    // 月光私酿：饮用后 8 分钟抗火+水肺+夜视，目前仅创造模式获取
+    public static final DeferredHolder<Item, MoonshineItem> MOONSHINE =
+        ITEMS.register("moonshine", () -> new MoonshineItem(new Item.Properties().stacksTo(16)));
+
+    // 暮色合金：目前仅创造模式获取（材质为占位图，后续替换）
+    public static final DeferredHolder<Item, Item> TWILIGHT_ALLOY =
+        ITEMS.register("twilight_alloy", () -> new Item(new Item.Properties()));
+
+    // 喷火甲虫图标物品：仅用作"夕阳甲虫乐队"进度图标，ISTER 渲染 TF 喷火甲虫 3D 模型
+    public static final DeferredHolder<Item, Item> FIRE_BEETLE_ICON =
+        ITEMS.register("fire_beetle_icon", () -> new Item(new Item.Properties()));
 
     public static final DeferredHolder<Item, StandingAndWallBlockItem> MOON_RABBIT_TROPHY =
         ITEMS.register("moon_rabbit_trophy", () -> new StandingAndWallBlockItem(
@@ -160,6 +178,14 @@ public class TwilightMoonshine {
 
     public static final DeferredHolder<Item, BlockItem> MOON_STONE_WALL_ITEM =
         ITEMS.register("moon_stone_wall", () -> new BlockItem(MOON_STONE_WALL.get(), new Item.Properties()));
+
+    // 月石碎片堆：9 个碎片压缩合成（参考 TF 装甲碎片堆），烧炼成月石砖
+    public static final DeferredHolder<Item, Item> MOON_STONE_SHARD_PILE =
+        ITEMS.register("moon_stone_shard_pile", () -> new Item(new Item.Properties()));
+
+    // 月石砖：月石碎片堆烧炼而成（参考 TF 骑士锭）
+    public static final DeferredHolder<Item, Item> MOON_STONE_BRICK =
+        ITEMS.register("moon_stone_brick", () -> new Item(new Item.Properties()));
 
     // --- Spawn eggs ---
     public static final DeferredRegister<Item> SPAWN_EGGS =
@@ -224,6 +250,11 @@ public class TwilightMoonshine {
     public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<PotionArrowRecipe>> POTION_ARROW_SERIALIZER =
         RECIPE_SERIALIZERS.register("potion_arrow", PotionArrowRecipe.Serializer::new);
 
+    // 秘密材料配方：JSON 给 5 个候选材料，按世界种子抽 3 个（详见 SecretRecipe），
+    // 用于暮色植物萃取液 / 暮色荧光精华 / 暮色合金的工作台合成
+    public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<SecretRecipe>> SECRET_RECIPE_SERIALIZER =
+        RECIPE_SERIALIZERS.register("secret", SecretRecipe.Serializer::new);
+
     // --- Creative tab ---
     public static final DeferredRegister<CreativeModeTab> CREATIVE_TABS =
         DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MODID);
@@ -233,6 +264,23 @@ public class TwilightMoonshine {
             .title(Component.translatable("itemGroup.twilightmoonshine"))
             .icon(() -> new ItemStack(MOON_RABBIT_TROPHY.get()))
             .build());
+
+    // --- Advancement triggers（进度判据触发器，条件检测见 EmbraceAdvancementEvents）---
+    public static final DeferredRegister<CriterionTrigger<?>> CRITERION_TRIGGERS =
+        DeferredRegister.create(Registries.TRIGGER_TYPE, MODID);
+
+    // 拥抱日：暮色之拥效果下，周围 1 格内聚集 10 只暮色森林被动生物
+    public static final DeferredHolder<CriterionTrigger<?>, EmbraceProximityTrigger> EMBRACE_HUG_TRIGGER =
+        CRITERION_TRIGGERS.register("embrace_hug", EmbraceProximityTrigger::new);
+
+    // 可爱的暮色虫子们：暮色之拥效果下，周围 4 格内同时存在粘液甲虫、喷火甲虫、巨型钳虫
+    public static final DeferredHolder<CriterionTrigger<?>, EmbraceProximityTrigger> EMBRACE_BEETLES_TRIGGER =
+        CRITERION_TRIGGERS.register("embrace_beetles", EmbraceProximityTrigger::new);
+
+    // 学会秘密配方：玩家获得某张配方时触发（判据 conditions.recipes 列出配方 ID = 产物物品注册名），
+    // 由 RecipeKnowledge.grant 触发，用于引诱式获取渠道的进度（手手相传 / 荧光引路）
+    public static final DeferredHolder<CriterionTrigger<?>, RecipeLearnedTrigger> RECIPE_LEARNED_TRIGGER =
+        CRITERION_TRIGGERS.register("recipe_learned", RecipeLearnedTrigger::new);
 
     // --- Sounds（字幕显示"月兔：XXX"）---
     public static final DeferredRegister<SoundEvent> SOUNDS =
@@ -278,6 +326,7 @@ public class TwilightMoonshine {
         POTIONS.register(modEventBus);
         MOB_EFFECTS.register(modEventBus);
         RECIPE_SERIALIZERS.register(modEventBus);
+        CRITERION_TRIGGERS.register(modEventBus);
         CREATIVE_TABS.register(modEventBus);
         SOUNDS.register(modEventBus);
     }

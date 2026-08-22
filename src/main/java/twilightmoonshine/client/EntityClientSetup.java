@@ -13,6 +13,7 @@ import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.ModelEvent;
 import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
 import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
+import twilightforest.client.model.entity.FireBeetleModel;
 import twilightmoonshine.TwilightMoonshine;
 import twilightmoonshine.client.renderer.MoonRabbitModel;
 import twilightmoonshine.client.renderer.MoonRabbitRenderer;
@@ -32,11 +33,14 @@ public class EntityClientSetup {
     public static void registerLayers(EntityRenderersEvent.RegisterLayerDefinitions event) {
         event.registerLayerDefinition(MoonRabbitModel.LAYER_LOCATION, MoonRabbitModel::createBodyLayer);
         event.registerLayerDefinition(MoonRabbitTrophyModel.LAYER_LOCATION, MoonRabbitTrophyModel::createBodyLayer);
+        // 喷火甲虫图标：复用 TF 模型定义（含 Jappa 资源包切换）
+        event.registerLayerDefinition(FireBeetleIconISTER.LAYER_LOCATION, FireBeetleModel::checkForPack);
     }
 
     @SubscribeEvent
     public static void registerClientExtensions(RegisterClientExtensionsEvent event) {
         event.registerItem(MoonRabbitISTER.CLIENT_ITEM_EXTENSION, TwilightMoonshine.MOON_RABBIT_TROPHY.get());
+        event.registerItem(FireBeetleIconISTER.CLIENT_ITEM_EXTENSION, TwilightMoonshine.FIRE_BEETLE_ICON.get());
     }
 
     @SubscribeEvent

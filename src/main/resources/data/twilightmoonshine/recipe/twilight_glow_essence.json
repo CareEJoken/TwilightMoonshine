@@ -1,0 +1,11 @@
+{
+  "type": "twilightmoonshine:secret",
+  "result": "twilightmoonshine:twilight_glow_essence",
+  "candidates": [
+    "twilightforest:mushgloom",
+    "twilightforest:torchberries",
+    "twilightforest:torchberry_plant",
+    "twilightforest:firefly",
+    "twilightforest:trollber"
+  ]
+}

@@ -24,8 +24,12 @@ public class CreativeTabSetup {
         event.accept(TwilightMoonshine.MOON_STONE_STAIRS_ITEM.get());
         event.accept(TwilightMoonshine.MOON_STONE_SLAB_ITEM.get());
         event.accept(TwilightMoonshine.MOON_STONE_WALL_ITEM.get());
+        event.accept(TwilightMoonshine.MOON_STONE_SHARD_PILE.get());
+        event.accept(TwilightMoonshine.MOON_STONE_BRICK.get());
         event.accept(TwilightMoonshine.GLOW_ESSENCE.get());
         event.accept(TwilightMoonshine.TWILIGHT_PLANT_EXTRACT.get());
+        event.accept(TwilightMoonshine.MOONSHINE.get());
+        event.accept(TwilightMoonshine.TWILIGHT_ALLOY.get());
         event.accept(TwilightMoonshine.MOON_BELL.get());
         event.accept(TwilightMoonshine.MOON_RABBIT_TROPHY.get());
         event.accept(TwilightMoonshine.MOON_RABBIT_SPAWN_EGG.get());

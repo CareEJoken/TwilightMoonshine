@@ -119,8 +119,8 @@ public class TwilightEmbraceEvents {
         }
     }
 
-    /** 实体类型是否来自 twilightforest 命名空间 */
-    private static boolean isTwilightMob(Entity entity) {
+    /** 实体类型是否来自 twilightforest 命名空间（包内可见，供 EmbraceAdvancementEvents 复用） */
+    static boolean isTwilightMob(Entity entity) {
         ResourceLocation key = BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType());
         return key != null && key.getNamespace().equals("twilightforest");
     }

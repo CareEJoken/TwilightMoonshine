@@ -1,13 +1,11 @@
 {
-  "type": "minecraft:crafting_shapeless",
-  "category": "misc",
-  "ingredients": [
-    {"item": "twilightforest:fiddlehead"},
-    {"item": "twilightforest:moss_patch"},
-    {"item": "twilightforest:mayapple"}
-  ],
-  "result": {
-    "id": "twilightmoonshine:twilight_plant_extract",
-    "count": 1
-  }
+  "type": "twilightmoonshine:secret",
+  "result": "twilightmoonshine:twilight_plant_extract",
+  "candidates": [
+    "twilightforest:fiddlehead",
+    "twilightforest:moss_patch",
+    "twilightforest:mayapple",
+    "twilightforest:root_strand",
+    "twilightforest:huge_water_lily"
+  ]
 }

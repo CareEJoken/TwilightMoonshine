@@ -1,0 +1,31 @@
+{
+  "parent": "twilightmoonshine:embrace_day",
+  "display": {
+    "icon": {
+      "id": "twilightmoonshine:twilight_alloy"
+    },
+    "title": {
+      "translate": "advancement.twilightmoonshine.glow_allure"
+    },
+    "description": {
+      "translate": "advancement.twilightmoonshine.glow_allure.desc"
+    },
+    "show_toast": true,
+    "announce_to_chat": true
+  },
+  "criteria": {
+    "learn_alloy_recipe": {
+      "trigger": "twilightmoonshine:recipe_learned",
+      "conditions": {
+        "recipes": [
+          "twilightmoonshine:twilight_alloy"
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "learn_alloy_recipe"
+    ]
+  ]
+}

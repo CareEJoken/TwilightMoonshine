@@ -1,0 +1,26 @@
+{
+  "parent": "twilightmoonshine:root",
+  "display": {
+    "icon": {
+      "id": "twilightmoonshine:fire_beetle_icon"
+    },
+    "title": {
+      "translate": "advancement.twilightmoonshine.embrace_beetles"
+    },
+    "description": {
+      "translate": "advancement.twilightmoonshine.embrace_beetles.desc"
+    },
+    "show_toast": true,
+    "announce_to_chat": true
+  },
+  "criteria": {
+    "embrace_beetles": {
+      "trigger": "twilightmoonshine:embrace_beetles"
+    }
+  },
+  "requirements": [
+    [
+      "embrace_beetles"
+    ]
+  ]
+}

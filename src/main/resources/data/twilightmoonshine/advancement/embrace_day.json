@@ -1,0 +1,26 @@
+{
+  "parent": "twilightmoonshine:root",
+  "display": {
+    "icon": {
+      "id": "twilightforest:fiddlehead"
+    },
+    "title": {
+      "translate": "advancement.twilightmoonshine.embrace_day"
+    },
+    "description": {
+      "translate": "advancement.twilightmoonshine.embrace_day.desc"
+    },
+    "show_toast": true,
+    "announce_to_chat": true
+  },
+  "criteria": {
+    "embrace_hug": {
+      "trigger": "twilightmoonshine:embrace_hug"
+    }
+  },
+  "requirements": [
+    [
+      "embrace_hug"
+    ]
+  ]
+}

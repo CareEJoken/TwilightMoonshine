@@ -1,0 +1,11 @@
+{
+  "type": "twilightmoonshine:secret",
+  "result": "twilightmoonshine:twilight_alloy",
+  "candidates": [
+    "twilightforest:wrought_iron_bar",
+    "twilightforest:ironwood_ingot",
+    "twilightforest:steeleaf_ingot",
+    "twilightforest:fiery_ingot",
+    "twilightforest:knightmetal_ingot"
+  ]
+}
