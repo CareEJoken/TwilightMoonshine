@@ -13,7 +13,7 @@ import net.minecraft.server.level.ServerPlayer;
 /**
  * 处方判据触发器：玩家"学会"了一份秘密配方（RecipeKnowledge.grant 成功后触发）。
  * 判据 JSON 里用 conditions.recipes 列出该判据需要的配方 ID：
- * 例如 hand_to_hand（三个判据各一张配方）与 glow_allure（暮色合金配方）。
+ * 例如 hand_to_hand（三个判据各一张配方）与 glow_allure（暮色合金粉末配方）。
  */
 public class RecipeLearnedTrigger extends SimpleCriterionTrigger<RecipeLearnedTrigger.TriggerInstance> {
 

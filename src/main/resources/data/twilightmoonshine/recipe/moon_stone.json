@@ -3,13 +3,12 @@
   "category": "building",
   "key": {
     "#": {
-      "item": "twilightmoonshine:moon_stone_shard"
+      "item": "twilightmoonshine:moon_stone_brick"
     }
   },
   "pattern": [
-    "###",
-    "###",
-    "###"
+    "##",
+    "##"
   ],
   "result": {
     "id": "twilightmoonshine:moon_stone",

@@ -16,7 +16,7 @@ import twilightmoonshine.item.recipe.SecretRecipeLogic;
 
 /**
  * 秘密配方相关指令。
- * /moonshine_secret：查看当前存档三种秘密配方（暮色植物萃取液 / 暮色荧光精华 / 暮色合金）
+ * /moonshine_secret：查看当前存档三种秘密配方（暮色植物萃取液 / 暮色荧光精华 / 暮色合金粉末）
  * 的三种秘密材料——各自从 5 个候选中按世界种子抽 3 个（权限等级 2），用于调试工作台秘密配方。
  */
 @EventBusSubscriber(modid = TwilightMoonshine.MODID, bus = EventBusSubscriber.Bus.GAME)

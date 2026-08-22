@@ -106,7 +106,7 @@ public class TwilightMoonshine {
     public static final DeferredHolder<Block, MoonRabbitTrophyWallBlock> MOON_RABBIT_WALL_TROPHY_BLOCK =
         BLOCKS.register("moon_rabbit_wall_trophy", () -> new MoonRabbitTrophyWallBlock(BlockBehaviour.Properties.of().instabreak()));
 
-    // --- Moon stone family（月石碎片熔合的建筑方块，材质为占位图，后续替换）---
+    // --- Moon stone brick family（4 个月石砖合成一格的建筑方块，材质为暖白色版本）---
     public static final DeferredHolder<Block, Block> MOON_STONE =
         BLOCKS.register("moon_stone", () -> new Block(BlockBehaviour.Properties.of()
             .strength(1.5F, 6.0F)
@@ -155,7 +155,7 @@ public class TwilightMoonshine {
     public static final DeferredHolder<Item, MoonshineItem> MOONSHINE =
         ITEMS.register("moonshine", () -> new MoonshineItem(new Item.Properties().stacksTo(16)));
 
-    // 暮色合金：目前仅创造模式获取（材质为占位图，后续替换）
+    // 暮色合金粉末：目前仅创造模式获取（材质为占位图，后续替换）
     public static final DeferredHolder<Item, Item> TWILIGHT_ALLOY =
         ITEMS.register("twilight_alloy", () -> new Item(new Item.Properties()));
 
@@ -164,7 +164,7 @@ public class TwilightMoonshine {
     public static final DeferredHolder<Item, SecretPageItem> SECRET_PAGE =
         ITEMS.register("secret_page", () -> new SecretPageItem(new Item.Properties().stacksTo(16)));
 
-    // 喷火甲虫图标物品：仅用作"夕阳甲虫派对"进度图标，ISTER 渲染 TF 喷火甲虫 3D 模型
+    // 喷火甲虫图标物品：仅用作"夕阳甲虫乐队"进度图标，ISTER 渲染 TF 喷火甲虫 3D 模型
     public static final DeferredHolder<Item, Item> FIRE_BEETLE_ICON =
         ITEMS.register("fire_beetle_icon", () -> new Item(new Item.Properties()));
 
@@ -190,7 +190,7 @@ public class TwilightMoonshine {
     public static final DeferredHolder<Item, Item> MOON_STONE_SHARD_PILE =
         ITEMS.register("moon_stone_shard_pile", () -> new Item(new Item.Properties()));
 
-    // 月石砖：月石碎片堆烧炼而成（参考 TF 骑士锭）
+    // 月石砖：月石碎片堆烧炼而成（参考 TF 骑士锭），4 个合成一格月石砖块
     public static final DeferredHolder<Item, Item> MOON_STONE_BRICK =
         ITEMS.register("moon_stone_brick", () -> new Item(new Item.Properties()));
 
@@ -258,7 +258,7 @@ public class TwilightMoonshine {
         RECIPE_SERIALIZERS.register("potion_arrow", PotionArrowRecipe.Serializer::new);
 
     // 秘密材料配方：JSON 给 5 个候选材料，按世界种子抽 3 个（详见 SecretRecipe），
-    // 用于暮色植物萃取液 / 暮色荧光精华 / 暮色合金的工作台合成
+    // 用于暮色植物萃取液 / 暮色荧光精华 / 暮色合金粉末的工作台合成
     public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<SecretRecipe>> SECRET_RECIPE_SERIALIZER =
         RECIPE_SERIALIZERS.register("secret", SecretRecipe.Serializer::new);
 
@@ -280,7 +280,7 @@ public class TwilightMoonshine {
     public static final DeferredHolder<CriterionTrigger<?>, EmbraceProximityTrigger> EMBRACE_HUG_TRIGGER =
         CRITERION_TRIGGERS.register("embrace_hug", EmbraceProximityTrigger::new);
 
-    // 夕阳甲虫派对：周围 4 格内同时存在黏液甲虫、喷火甲虫、巨钳甲虫 + 6 格内唱机（无需暮色之拥）
+    // 夕阳甲虫乐队：周围 4 格内同时存在黏液甲虫、喷火甲虫、巨钳甲虫 + 6 格内唱机（无需暮色之拥）
     public static final DeferredHolder<CriterionTrigger<?>, EmbraceProximityTrigger> EMBRACE_BEETLES_TRIGGER =
         CRITERION_TRIGGERS.register("embrace_beetles", EmbraceProximityTrigger::new);
 
