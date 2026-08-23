@@ -13,6 +13,7 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
@@ -247,7 +248,8 @@ public class MoonRabbit extends Rabbit {
         stack.shrink(1);
         // 喝掉后返还空瓶
         player.addItem(new ItemStack(Items.GLASS_BOTTLE));
-        this.playSound(this.getEatingSound(stack), 1.0F, 1.0F);
+        // 喝药水用"啜饮"音效（不是吃东西的声音）
+        this.playSound(SoundEvents.GENERIC_DRINK, 1.0F, 1.0F);
         if (this.potionTradeBits == 7) {
             // 集齐三种：兑一杯月光私酿，重新计数
             this.potionTradeBits = 0;

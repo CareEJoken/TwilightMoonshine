@@ -17,10 +17,10 @@
   },
   "moon_rabbit.sneeze": {
     "subtitle": "subtitles.twilightmoonshine.moon_rabbit.sneeze",
-    "sounds": ["minecraft:mob/panda/sneeze1", "minecraft:mob/panda/sneeze2", "minecraft:mob/panda/sneeze3"]
+    "sounds": ["twilightmoonshine:mob/moon_rabbit/sneeze1", "twilightmoonshine:mob/moon_rabbit/sneeze2", "twilightmoonshine:mob/moon_rabbit/sneeze3"]
   },
   "moon_rabbit.pre_sneeze": {
     "subtitle": "subtitles.twilightmoonshine.moon_rabbit.pre_sneeze",
-    "sounds": ["minecraft:mob/panda/pre_sneeze"]
+    "sounds": ["twilightmoonshine:mob/moon_rabbit/pre_sneeze"]
   }
 }
