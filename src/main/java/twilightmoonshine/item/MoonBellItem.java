@@ -3,6 +3,8 @@ package twilightmoonshine.item;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
@@ -46,6 +48,8 @@ public class MoonBellItem extends Item {
         player.displayClientMessage(Component.translatable(
             nowActive ? "item.twilightmoonshine.moon_bell.on" : "item.twilightmoonshine.moon_bell.off"), true);
         MoonlightSyncPayload.broadcast(serverLevel, nowActive);
+        // 暂时复用原版钟声（block.bell.resonate），以后换自定义音效
+        serverLevel.playSound(null, player.blockPosition(), SoundEvents.BELL_RESONATE, SoundSource.BLOCKS, 2.0F, 1.0F);
         // 满月终临：成功使用一次月之铃（启动/关闭月光都算一次摇铃）
         if (player instanceof ServerPlayer serverPlayer) {
             TwilightMoonshine.MOON_BELL_USED_TRIGGER.get().trigger(serverPlayer);

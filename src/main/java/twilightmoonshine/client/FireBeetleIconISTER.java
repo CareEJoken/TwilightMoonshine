@@ -61,7 +61,7 @@ public class FireBeetleIconISTER extends BlockEntityWithoutLevelRenderer {
             Lighting.setupFor3DItems();
             pose.pushPose();
             // 最终画面空间微调：甲虫整体再往左上方挪 ~2.4px（0.15 单位），图标居中余量
-            pose.translate(0.0F, 17.5F/16.0F, 0.0F);
+            pose.translate(0.05F, 17.5F/16.0F, 0.0F);
             // pose.translate(0.5F, 0.5F, 0.5F);          // 图标中心
             pose.mulPose(Axis.XP.rotationDegrees(30));   // 30° 俯角
             // 与月兔战利品相同的 tick 计时旋转（20°/秒，暂停时停在 -45°）

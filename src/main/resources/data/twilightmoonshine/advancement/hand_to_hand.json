@@ -2,7 +2,7 @@
   "parent": "twilightmoonshine:root",
   "display": {
     "icon": {
-      "id": "minecraft:paper"
+      "id": "twilightmoonshine:secret_page"
     },
     "title": {
       "translate": "advancement.twilightmoonshine.hand_to_hand"

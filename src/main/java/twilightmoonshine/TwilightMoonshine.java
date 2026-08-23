@@ -18,6 +18,7 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.SpawnEggItem;
 import net.minecraft.world.item.StandingAndWallBlockItem;
 import net.minecraft.world.item.alchemy.Potion;
@@ -153,7 +154,7 @@ public class TwilightMoonshine {
 
     // 月光私酿：饮用后 8 分钟抗火+水肺+夜视，目前仅创造模式获取
     public static final DeferredHolder<Item, MoonshineItem> MOONSHINE =
-        ITEMS.register("moonshine", () -> new MoonshineItem(new Item.Properties().stacksTo(16)));
+        ITEMS.register("moonshine", () -> new MoonshineItem(new Item.Properties().stacksTo(16).rarity(Rarity.UNCOMMON)));
 
     // 暮色合金粉末：目前仅创造模式获取（材质为占位图，后续替换）
     public static final DeferredHolder<Item, Item> TWILIGHT_ALLOY =
@@ -171,7 +172,7 @@ public class TwilightMoonshine {
     public static final DeferredHolder<Item, StandingAndWallBlockItem> MOON_RABBIT_TROPHY =
         ITEMS.register("moon_rabbit_trophy", () -> new StandingAndWallBlockItem(
             MOON_RABBIT_TROPHY_BLOCK.get(), MOON_RABBIT_WALL_TROPHY_BLOCK.get(),
-            new Item.Properties(), Direction.DOWN));
+            new Item.Properties().rarity(Rarity.UNCOMMON), Direction.DOWN));
 
     // --- Moon stone family items ---
     public static final DeferredHolder<Item, BlockItem> MOON_STONE_ITEM =
