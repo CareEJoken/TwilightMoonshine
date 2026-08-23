@@ -6,7 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.particles.DustParticleOptions;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -18,6 +18,8 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.JukeboxBlock;
@@ -27,7 +29,6 @@ import net.minecraft.world.phys.Vec3;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
-import org.joml.Vector3f;
 import twilightmoonshine.TwilightMoonshine;
 
 /**
@@ -35,8 +36,9 @@ import twilightmoonshine.TwilightMoonshine;
  * 只要某台唱片机在播放，且黏液甲虫、喷火甲虫、巨钳甲虫各至少 1 只出现在它附近 6 格内，
  * 三只甲虫就以该唱片机为舞台就地演出：
  * - 三只虫错开一拍轮流叫唤，偶尔穿插自己的叫声（不再回放音符盒乐器声，唱片机的音乐就是配乐）；
- * - 轮到的那只虫在节拍上原地小跳一下，头顶冒出自己颜色的粒子（黏液=绿、喷火=橙、钳虫=蓝）；
+ * - 轮到的那只虫在节拍上原地小跳一下，头顶冒音符粒子（三种甲虫都有）；
  * - 演出期间虫子停下寻路与攻击，整只虫（含身体）旋转面向唱片机，按节拍上下弹跳；
+ * - 巨钳甲虫演出中不会夹住路人（禁其目标选择，夹着的人也当场放下来）；
  * - 唱片停、虫死/走远或区块卸载即散场。
  * 不需要玩家参与，也不依赖暮色之拥（进度判定在 EmbraceAdvancementEvents 里另行检查）。
  */
@@ -69,9 +71,9 @@ public class BeetleTrioEvents {
      * 只保留粒子颜色与各自的叫声，不再回放音符盒乐器声。
      */
     private static final SpeciesPart[] PARTS = {
-        new SpeciesPart(110, 220, 90, SLIME_AMBIENT),
-        new SpeciesPart(240, 120, 40, FIRE_AMBIENT),
-        new SpeciesPart(90, 130, 240, PINCH_AMBIENT),
+        new SpeciesPart(SLIME_AMBIENT),
+        new SpeciesPart(FIRE_AMBIENT),
+        new SpeciesPart(PINCH_AMBIENT),
     };
 
     /** 按维度索引的活跃乐队（键 = 唱片机坐标） */
@@ -107,6 +109,7 @@ public class BeetleTrioEvents {
             Map.Entry<ResourceKey<Level>, Map<BlockPos, BeetleBand>> dim = dims.next();
             ServerLevel level = server.getLevel(dim.getKey());
             if (level == null) {
+                dim.getValue().values().forEach(BeetleBand::release);
                 dims.remove();
                 continue;
             }
@@ -117,6 +120,7 @@ public class BeetleTrioEvents {
                     || !level.hasChunkAt(band.jukebox)
                     || !isPlayingJukebox(level, band.jukebox)
                     || !band.isValid()) {
+                    band.release();
                     bands.remove();
                     continue;
                 }
@@ -169,8 +173,8 @@ public class BeetleTrioEvents {
         return SoundEvent.createVariableRangeEvent(ResourceLocation.fromNamespaceAndPath("twilightforest", path));
     }
 
-    /** 一个声部：粒子颜色（RGB 0-255）、甲虫自己的叫声 */
-    private record SpeciesPart(int red, int green, int blue, SoundEvent ambient) {}
+    /** 一个声部：甲虫自己的叫声 */
+    private record SpeciesPart(SoundEvent ambient) {}
 
     /** 一支活跃的乐队：舞台唱片机 + 三名成员 */
     private static final class BeetleBand {
@@ -228,6 +232,21 @@ public class BeetleTrioEvents {
                     }
                 }
             }
+            // 巨钳甲虫演出期间专心演出：直接取消攻击意图——禁用目标选择
+            // （只清 setTarget(null) 不够：Mob.serverAiStep 每 tick 先 targetSelector 重选、
+            // 后 goalSelector 攻击，TARGET 标志禁掉后目标永远不会被重新选中，夹人/攻击意图彻底归零）
+            if (pinch instanceof PathfinderMob pathfinder) {
+                pathfinder.targetSelector.disableControlFlag(Goal.Flag.TARGET);
+                // 刚夹住的人（组队前就夹上的）：立刻放下来（先拷贝，stopRiding 会修改乘客列表）
+                List.copyOf(pinch.getPassengers()).forEach(Entity::stopRiding);
+            }
+        }
+
+        /** 散场：恢复被禁用的目标选择（巨钳甲虫演出后恢复攻击/夹人能力） */
+        void release() {
+            if (pinch instanceof PathfinderMob pathfinder) {
+                pathfinder.targetSelector.enableControlFlag(Goal.Flag.TARGET);
+            }
         }
 
         /** 演一拍：本拍轮到的那只虫叫唤、冒粒子、原地小跳；朝向已由 holdAndFace 每 tick 保持 */
@@ -246,10 +265,8 @@ public class BeetleTrioEvents {
                     0.8F + level.random.nextFloat() * 0.4F);
             }
 
-            // 头顶冒出自己颜色的粒子（1.21.1 没有彩色音符粒子 NoteParticleOption，用彩色粉尘代替）
-            level.sendParticles(
-                new DustParticleOptions(new Vector3f(part.red / 255F, part.green / 255F, part.blue / 255F), 0.5F),
-                x, y + 0.2, z, 1, 0.15, 0.15, 0.15, 0.0);
+            // 头顶冒音符粒子（和原版唱片机旋律粒子同类）
+            level.sendParticles(ParticleTypes.NOTE, x, y + 0.2, z, 1, 0.0, 0.0, 0.0, 0.0);
 
             // 节拍上原地小跳一下（初速 0.35 的起跳约 8.7 tick 落地，正好合上一拍）
             if (beetle.onGround()) {

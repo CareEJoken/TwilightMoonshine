@@ -1,13 +1,16 @@
 package twilightmoonshine.entity;
 
+import java.util.Set;
 import java.util.UUID;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.Mth;
@@ -32,6 +35,8 @@ import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.alchemy.Potion;
+import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.pathfinder.Path;
 import twilightmoonshine.TwilightMoonshine;
@@ -71,6 +76,8 @@ public class MoonRabbit extends Rabbit {
     private UUID recipeFeeder;
     /** 是否已经打过第一次喷嚏：第一次必喷出神秘书页，之后回归 50% 概率（随 NBT 存档） */
     private boolean firstSneezeDone;
+    /** 药水交换：已收的药水类别位（1=暮色、2=荧光、4=抗性），集齐三瓶送月光私酿（随 NBT 存档） */
+    private byte potionTradeBits;
 
     @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
@@ -94,6 +101,11 @@ public class MoonRabbit extends Rabbit {
 
     private void setSneezeTicks(int ticks) {
         this.entityData.set(DATA_SNEEZE_TICKS, ticks);
+    }
+
+    // 待机状态：进食膨胀中 / 喷嚏前奏中 → 不主动走动、不被胡萝卜引诱（原地待机）
+    private boolean isBusy() {
+        return this.getInflateLevel() > 0 || this.getSneezeTicks() > 0;
     }
 
     // 体型系数：0 级 1.0 → 4 级 2.0，每级 +25%（L1=1.25、L2=1.5、L3=1.75）。
@@ -142,6 +154,15 @@ public class MoonRabbit extends Rabbit {
     @Override
     public InteractionResult mobInteract(Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
+        // --- 药水交换（与喂食分开，给药水月兔不变大）：
+        // 本模组三种药水（暮色/荧光/抗性，含延长/强化版）各交一瓶 → 月兔给月光私酿 ---
+        int potionBit = tradePotionBit(stack);
+        if (potionBit != 0) {
+            if (!(player instanceof ServerPlayer serverPlayer)) {
+                return InteractionResult.SUCCESS;
+            }
+            return acceptTradePotion(serverPlayer, stack, potionBit);
+        }
         if (this.isCarrotFood(stack)) {
             if (this.level().isClientSide) {
                 return InteractionResult.SUCCESS;
@@ -175,6 +196,69 @@ public class MoonRabbit extends Rabbit {
             return InteractionResult.SUCCESS;
         }
         return super.mobInteract(player, hand);
+    }
+
+    /** 药水交换：暮色药水（普通/延长） */
+    private static final Set<ResourceKey<Potion>> POTION_TRADE_TWILIGHT = Set.of(
+        TwilightMoonshine.TWILIGHT_POTION.getKey(),
+        TwilightMoonshine.LONG_TWILIGHT_POTION.getKey());
+    /** 荧光药水（普通/延长） */
+    private static final Set<ResourceKey<Potion>> POTION_TRADE_GLOW = Set.of(
+        TwilightMoonshine.GLOW_POTION.getKey(),
+        TwilightMoonshine.LONG_GLOW_POTION.getKey());
+    /** 抗性药水（普通/延长/强化） */
+    private static final Set<ResourceKey<Potion>> POTION_TRADE_RESISTANCE = Set.of(
+        TwilightMoonshine.RESISTANCE_POTION.getKey(),
+        TwilightMoonshine.LONG_RESISTANCE_POTION.getKey(),
+        TwilightMoonshine.STRONG_RESISTANCE_POTION.getKey());
+
+    /** 瓶装药水且是本模组三种药水之一 → 返回类别位（1=暮色、2=荧光、4=抗性），否则 0（药箭不算） */
+    private static int tradePotionBit(ItemStack stack) {
+        if (!stack.is(Items.POTION) && !stack.is(Items.SPLASH_POTION) && !stack.is(Items.LINGERING_POTION)) {
+            return 0;
+        }
+        return stack.getOrDefault(DataComponents.POTION_CONTENTS, PotionContents.EMPTY)
+            .potion()
+            .map(p -> {
+                if (p.unwrapKey().map(POTION_TRADE_TWILIGHT::contains).orElse(false)) {
+                    return 1;
+                }
+                if (p.unwrapKey().map(POTION_TRADE_GLOW::contains).orElse(false)) {
+                    return 2;
+                }
+                if (p.unwrapKey().map(POTION_TRADE_RESISTANCE::contains).orElse(false)) {
+                    return 4;
+                }
+                return 0;
+            })
+            .orElse(0);
+    }
+
+    /** 收下一种药水：1=暮色、2=荧光、4=抗性；集齐三种送一瓶月光私酿（然后重置再收） */
+    private InteractionResult acceptTradePotion(ServerPlayer player, ItemStack stack, int give) {
+        if ((this.potionTradeBits & give) != 0) {
+            // 同类已收过：不消耗，提醒一下
+            player.displayClientMessage(
+                Component.translatable("message.twilightmoonshine.potion_trade.duplicate"), true);
+            return InteractionResult.SUCCESS;
+        }
+        Component potionName = stack.getHoverName();
+        this.potionTradeBits = (byte) (this.potionTradeBits | give);
+        stack.shrink(1);
+        // 喝掉后返还空瓶
+        player.addItem(new ItemStack(Items.GLASS_BOTTLE));
+        this.playSound(this.getEatingSound(stack), 1.0F, 1.0F);
+        if (this.potionTradeBits == 7) {
+            // 集齐三种：兑一杯月光私酿，重新计数
+            this.potionTradeBits = 0;
+            player.displayClientMessage(
+                Component.translatable("message.twilightmoonshine.potion_trade.complete"), true);
+            player.addItem(new ItemStack(TwilightMoonshine.MOONSHINE.get()));
+        } else {
+            player.displayClientMessage(
+                Component.translatable("message.twilightmoonshine.potion_trade.taken", potionName), true);
+        }
+        return InteractionResult.SUCCESS;
     }
 
     private boolean isCarrotFood(ItemStack stack) {
@@ -249,6 +333,7 @@ public class MoonRabbit extends Rabbit {
             tag.putUUID("MoonRecipeFeeder", this.recipeFeeder);
         }
         tag.putBoolean("MoonFirstSneeze", this.firstSneezeDone);
+        tag.putByte("MoonPotionTrade", this.potionTradeBits);
     }
 
     @Override
@@ -258,6 +343,7 @@ public class MoonRabbit extends Rabbit {
         this.entityData.set(DATA_SNEEZE_TICKS, tag.getInt("MoonSneezeTicks"));
         this.recipeFeeder = tag.hasUUID("MoonRecipeFeeder") ? tag.getUUID("MoonRecipeFeeder") : null;
         this.firstSneezeDone = tag.getBoolean("MoonFirstSneeze");
+        this.potionTradeBits = tag.getByte("MoonPotionTrade");
     }
 
     @Override
@@ -266,13 +352,34 @@ public class MoonRabbit extends Rabbit {
         this.goalSelector.addGoal(1, new ClimbOnTopOfPowderSnowGoal(this, this.level()));
         this.goalSelector.addGoal(1, new PanicGoal(this, 2.2));
         // 不注册 BreedGoal：月兔无法繁殖
-        // 胡萝卜/金胡萝卜引诱跟随（蒲公英不再是食物）
+        // 胡萝卜/金胡萝卜引诱跟随（蒲公英不再是食物）；膨胀/喷嚏中不受引诱
         this.goalSelector.addGoal(3, new TemptGoal(this, 1.0,
-            p -> p.is(Items.CARROT) || p.is(Items.GOLDEN_CARROT), false));
+            p -> p.is(Items.CARROT) || p.is(Items.GOLDEN_CARROT), false) {
+            @Override
+            public boolean canUse() {
+                return !isBusy() && super.canUse();
+            }
+
+            @Override
+            public boolean canContinueToUse() {
+                return !isBusy() && super.canContinueToUse();
+            }
+        });
         // 不躲避玩家；保留躲避狼和怪物的本能
         this.goalSelector.addGoal(4, new AvoidEntityGoal<>(this, Wolf.class, 10.0F, 2.2, 2.2));
         this.goalSelector.addGoal(4, new AvoidEntityGoal<>(this, Monster.class, 4.0F, 2.2, 2.2));
-        this.goalSelector.addGoal(6, new WaterAvoidingRandomStrollGoal(this, 0.6));
+        // 膨胀/喷嚏中不闲逛（原地待机；goal 停止时自动 navigation.stop()）
+        this.goalSelector.addGoal(6, new WaterAvoidingRandomStrollGoal(this, 0.6) {
+            @Override
+            public boolean canUse() {
+                return !isBusy() && super.canUse();
+            }
+
+            @Override
+            public boolean canContinueToUse() {
+                return !isBusy() && super.canContinueToUse();
+            }
+        });
         this.goalSelector.addGoal(11, new LookAtPlayerGoal(this, Player.class, 10.0F));
         // 修复：原版兔子缺少 RandomLookAroundGoal 导致无限徘徊（官方 1.21.4 修复）
         this.goalSelector.addGoal(12, new RandomLookAroundGoal(this));

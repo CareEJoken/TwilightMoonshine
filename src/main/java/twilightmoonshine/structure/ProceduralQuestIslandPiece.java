@@ -2,18 +2,24 @@ package twilightmoonshine.structure;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.StructureManager;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.DoublePlantBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.levelgen.structure.StructurePiece;
 import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceSerializationContext;
+import twilightforest.init.TFBlocks;
 import twilightmoonshine.TwilightMoonshine;
 import twilightmoonshine.config.Config;
+import twilightmoonshine.entity.MoonRabbit;
 import twilightmoonshine.util.SchematicReader;
 import twilightmoonshine.util.SchematicReader.Schematic;
 
@@ -113,6 +119,75 @@ public class ProceduralQuestIslandPiece extends StructurePiece {
                     mpos.set(baseX + x, baseY + y, baseZ + z);
                     level.setBlock(mpos, state, 0);
                 }
+            }
+        }
+
+        // --- 植被：每个草/苔方块上方均匀随机种草/高草/暮色蕨/mayapple ---
+        // 保留 schema 里的草/苔分布（不做 50/50 互换），只做"草方块上有植物"这一件事。
+        RandomSource decoRng = RandomSource.create(
+            Mth.getSeed(originX, originY, originZ) ^ level.getSeed());
+        for (int x = startX; x <= endX; x++) {
+            for (int y = startY; y <= endY; y++) {
+                for (int z = startZ; z <= endZ; z++) {
+                    if (!schem.blockAt(x, y, z).is(Blocks.GRASS_BLOCK)
+                        && !schem.blockAt(x, y, z).is(Blocks.MOSS_BLOCK)) {
+                        continue;
+                    }
+                    mpos.set(baseX + x, baseY + y, baseZ + z);
+                    BlockPos above = mpos.above();
+                    if (!structureBoundingBox.isInside(above)) continue;
+                    BlockState aboveState = level.getBlockState(above);
+                    if (!aboveState.isAir()) continue;
+
+                    BlockPos aboveAbove = above.above();
+                    int choice = decoRng.nextInt(100);
+                    if (choice < 40) {
+                        continue; // 40% 保持空气（不放植物）
+                    } else if (choice < 55) {
+                        level.setBlock(above, Blocks.SHORT_GRASS.defaultBlockState(), 2);
+                    } else if (choice < 70) {
+                        // 高草：下+上两段，仅当上上格也是空气才放上段
+                        level.setBlock(above, Blocks.TALL_GRASS.defaultBlockState()
+                            .setValue(DoublePlantBlock.HALF, DoubleBlockHalf.LOWER), 2);
+                        if (structureBoundingBox.isInside(aboveAbove)
+                            && level.getBlockState(aboveAbove).isAir()) {
+                            level.setBlock(aboveAbove, Blocks.TALL_GRASS.defaultBlockState()
+                                .setValue(DoublePlantBlock.HALF, DoubleBlockHalf.UPPER), 2);
+                        }
+                    } else if (choice < 85) {
+                        level.setBlock(above, TFBlocks.FIDDLEHEAD.get().defaultBlockState(), 2);
+                    } else {
+                        level.setBlock(above, TFBlocks.MAYAPPLE.get().defaultBlockState(), 2);
+                    }
+                }
+            }
+        }
+
+        // --- 月兔：四块石砖/苔石砖（喷泉平台四个角）中确定性选一块生成 ---
+        // 选择只依赖世界种子+结构原点，因此所有 chunk 的 postProcess 得到同一块砖；
+        // 且只在"选中的砖位于当前 chunk 交集内"时生成 → 恰好生成一次。
+        // 位置是新 schema 的石砖/苔石砖（x31/y36/z38 附近，上方为空气，见 schem_analyze）。
+        int[] spawnX = {33, 30, 37, 34};
+        int[] spawnY = {36, 36, 36, 36};
+        int[] spawnZ = {38, 41, 42, 45};
+        RandomSource rabbitRng = RandomSource.create(
+            Mth.getSeed(originX, originY, originZ) ^ level.getSeed() ^ 0x74756E2CBC1AL);
+        int idx = rabbitRng.nextInt(spawnX.length);
+        BlockPos spawnPos = new BlockPos(
+            baseX + spawnX[idx], baseY + spawnY[idx], baseZ + spawnZ[idx]);
+        if (structureBoundingBox.isInside(spawnPos)) {
+            BlockState ground = level.getBlockState(spawnPos);
+            BlockState spawnCell = level.getBlockState(spawnPos.above());
+            if ((ground.is(Blocks.STONE_BRICKS) || ground.is(Blocks.MOSSY_STONE_BRICKS))
+                && spawnCell.isAir()) {
+                MoonRabbit rabbit = new MoonRabbit(
+                    TwilightMoonshine.MOON_RABBIT.get(), level.getLevel());
+                rabbit.setPos(spawnPos.getX() + 0.5, spawnPos.getY() + 1.0, spawnPos.getZ() + 0.5);
+                rabbit.setYRot(rabbitRng.nextFloat() * 360.0F);
+                rabbit.setPersistenceRequired();
+                rabbit.finalizeSpawn(level, level.getCurrentDifficultyAt(spawnPos),
+                    MobSpawnType.STRUCTURE, null);
+                level.getLevel().addFreshEntity(rabbit);
             }
         }
     }

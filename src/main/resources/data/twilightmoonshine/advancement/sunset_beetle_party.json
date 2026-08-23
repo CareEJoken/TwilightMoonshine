@@ -11,7 +11,8 @@
       "translate": "advancement.twilightmoonshine.sunset_beetle_party.desc"
     },
     "show_toast": true,
-    "announce_to_chat": true
+    "announce_to_chat": true,
+    "frame": "challenge"
   },
   "criteria": {
     "beetle_party": {

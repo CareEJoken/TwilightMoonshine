@@ -20,15 +20,14 @@ public class CreativeTabSetup {
         if (event.getTab() != TwilightMoonshine.MOONSHINE_TAB.get()) return;
 
         event.accept(TwilightMoonshine.MOON_STONE_SHARD.get());
+        event.accept(TwilightMoonshine.MOON_STONE_SHARD_PILE.get());
         event.accept(TwilightMoonshine.MOON_STONE_ITEM.get());
         event.accept(TwilightMoonshine.MOON_STONE_STAIRS_ITEM.get());
         event.accept(TwilightMoonshine.MOON_STONE_SLAB_ITEM.get());
         event.accept(TwilightMoonshine.MOON_STONE_WALL_ITEM.get());
-        event.accept(TwilightMoonshine.MOON_STONE_SHARD_PILE.get());
         event.accept(TwilightMoonshine.MOON_STONE_BRICK.get());
         event.accept(TwilightMoonshine.GLOW_ESSENCE.get());
         event.accept(TwilightMoonshine.TWILIGHT_PLANT_EXTRACT.get());
-        event.accept(TwilightMoonshine.MOONSHINE.get());
         event.accept(TwilightMoonshine.TWILIGHT_ALLOY.get());
         event.accept(TwilightMoonshine.MOON_BELL.get());
         event.accept(TwilightMoonshine.MOON_RABBIT_TROPHY.get());
@@ -60,6 +59,9 @@ public class CreativeTabSetup {
         event.accept(potionStack(Items.SPLASH_POTION, TwilightMoonshine.LONG_TWILIGHT_POTION));
         event.accept(potionStack(Items.LINGERING_POTION, TwilightMoonshine.LONG_TWILIGHT_POTION));
         event.accept(potionStack(Items.TIPPED_ARROW, TwilightMoonshine.LONG_TWILIGHT_POTION));
+
+        // 月光私酿放在最后
+        event.accept(TwilightMoonshine.MOONSHINE.get());
     }
 
     private static void addPotionFamily(BuildCreativeModeTabContentsEvent event,
