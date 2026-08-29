@@ -5,11 +5,12 @@ license = "MIT"
 [[mods]]
     modId = "twilightmoonshine"
     version = "${file.jarVersion}"
-    displayName = "Twilight Moonshine"
+    displayName = "The Twilight Moonshine"
     authors = ["CareEJoken"]
     description = "Tweaks and content for Twilight Forest: the moon rabbit and moonshine brewing, moon stone construction materials, re-enabled Mushroom Tower and Quest Island generation, new potion effects, and the sunset beetle band. Requires Twilight Forest 4.8+"
     credits = "Built on Twilight Forest by Team Twilight, licensed under LGPLv3 (see LICENSE)."
     logoFile = "pack.png"
+    displayURL = "https://legacy.curseforge.com/minecraft/mc-mods/the-twilight-moonshine"
 
 [[mixins]]
     config = "twilightmoonshine.mixins.json"

@@ -86,6 +86,7 @@
   "advancement.twilightmoonshine.coolidge_family": "柯立芝家族",
   "advancement.twilightmoonshine.coolidge_family.desc": "痛饮月光私酿",
   "message.twilightmoonshine.recipe_learned": "你获得了%s的配方:%s",
+  "message.twilightmoonshine.material_separator": "、",
   "message.twilightmoonshine.potion_trade.taken": "月兔收下了 %s，它似乎还想尝尝别的药水",
   "message.twilightmoonshine.potion_trade.complete": "月兔把月光私酿交给了你！",
   "message.twilightmoonshine.potion_trade.complete_trophy": "月兔把月光私酿交给了你，还额外送你一座月兔战利品——只送一次的纪念！",

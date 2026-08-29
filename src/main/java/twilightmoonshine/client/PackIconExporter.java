@@ -54,7 +54,7 @@ public final class PackIconExporter {
                         () -> Component.literal("pack.png 已导出 → " + OUTPUT.toAbsolutePath()), false);
                 } catch (Throwable t) {
                     ctx.getSource().sendFailure(
-                        Component.literal("pack.png 导出失败：" + t.getMessage()));
+                        Component.literal("pack.png 导出失败: " + t.getMessage()));
                 }
                 return 1;
             }));

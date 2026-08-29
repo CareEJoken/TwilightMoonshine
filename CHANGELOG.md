@@ -1,4 +1,4 @@
-# Twilight Moonshine Changelog
+# The Twilight Moonshine Changelog
 
 ## 1.0.0
 

@@ -1,8 +1,8 @@
-# Twilight Moonshine
+# The Twilight Moonshine
 
 *中文说明见 [README_zh.md](README_zh.md)*
 
-**Twilight Moonshine** is a Twaddon made with [NeoForge](https://neoforged.net/) and dedicated to **Twilight Forest** lore. Visit the twilight lake, befriend Moon Rabbits, mix potions and watch the forest's little creatures play music in the moonlight.
+**The Twilight Moonshine** is a Twaddon made with [NeoForge](https://neoforged.net/) and dedicated to **Twilight Forest** lore. Visit the twilight lake, befriend Moon Rabbits, mix potions and watch the forest's little creatures play music in the moonlight.
 
 Requires Minecraft **1.21.1**, NeoForge **21.1.x** and **Twilight Forest 4.8+**.
 

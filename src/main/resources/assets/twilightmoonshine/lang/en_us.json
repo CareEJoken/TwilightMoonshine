@@ -1,5 +1,5 @@
 {
-  "itemGroup.twilightmoonshine": "Twilight Moonshine",
+  "itemGroup.twilightmoonshine": "The Twilight Moonshine",
   "config.twilightmoonshine.mushroomCastleChance": "Mushroom Castle Chance",
   "config.twilightmoonshine.mushroomCastleChance.tooltip": "Chance (%) that the Mushroom Tower generates at a Dense Mushroom Forest landmark center. 0% = vanilla Twilight Forest 4.8 behavior.",
   "entity.twilightmoonshine.moon_rabbit": "Moon Rabbit",
@@ -85,6 +85,7 @@
   "advancement.twilightmoonshine.coolidge_family": "The Coolidge Family",
   "advancement.twilightmoonshine.coolidge_family.desc": "Take a good swig of the Moonlight Moonshine",
   "message.twilightmoonshine.recipe_learned": "You received the recipe for %s: %s",
+  "message.twilightmoonshine.material_separator": ", ",
   "message.twilightmoonshine.potion_trade.taken": "The Moon Rabbit takes %s and still wants other potions",
   "message.twilightmoonshine.potion_trade.complete": "The Moon Rabbit hands you a Moonlight Moonshine!",
   "message.twilightmoonshine.potion_trade.complete_trophy": "The Moon Rabbit hands you a Moonlight Moonshine — and a Moon Rabbit Trophy, a one-time gift!",

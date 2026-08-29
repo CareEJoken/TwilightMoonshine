@@ -63,9 +63,10 @@ public final class RecipeKnowledge {
      * 首次解锁（grant 里调用）与重复翻阅已掌握的神秘书页（SecretPageItem.use）用同一条同样内容。
      */
     public static void showRecipeMessage(ServerPlayer player, ResourceLocation recipe) {
+        Component separator = Component.translatable("message.twilightmoonshine.material_separator");
         Component materials = SecretRecipeLogic.secretFor(player.level(), candidatesFor(recipe)).stream()
             .map(RecipeKnowledge::itemDisplayName)
-            .reduce((a, b) -> a.copy().append("、").append(b))
+            .reduce((a, b) -> a.copy().append(separator).append(b))
             .orElse(Component.literal("?"));
         player.displayClientMessage(
             Component.translatable("message.twilightmoonshine.recipe_learned", itemDisplayName(recipe), materials), true);

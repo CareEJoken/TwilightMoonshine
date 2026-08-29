@@ -1,4 +1,4 @@
-# CurseForge Release Materials — Twilight Moonshine 1.0.0
+# CurseForge Release Materials — The Twilight Moonshine 1.0.0
 
 本项目自己的发布物料箱。`CURSEFORGE_PROJECT_DESCRIPTION`（下一节）可直接整段粘贴到
 CurseForge 项目页的 Description 编辑器（支持 Markdown）。
@@ -8,7 +8,7 @@ CurseForge 项目页的 Description 编辑器（支持 Markdown）。
 ## 1. 可粘贴的项目描述
 
 ````markdown
-# Twilight Moonshine
+# The Twilight Moonshine
 
 An addon for **Twilight Forest** (1.21.1) by CareEJoken.
 
@@ -59,7 +59,7 @@ Found a bug or have an idea? Leave a comment on this project page.
 
 | 字段 | 值 |
 |---|---|
-| 项目名称 | Twilight Moonshine |
+| 项目名称 | The Twilight Moonshine |
 | 游戏 | Minecraft |
 | 项目类型 | Mod |
 | 分类 | Addons → Twilight Forest（若列表里没有就选 Addons/Adventure and RPG,并在描述里写清是 TF 附属） |
@@ -72,7 +72,7 @@ Found a bug or have an idea? Leave a comment on this project page.
 2. 选择游戏版本：**1.21.1**；Modloader：**NeoForge 21.1.220**（上传页面的版本下拉里选 21.1.220；如果是列表勾选就把看到的最接近的 21.1.x 勾上）。
 3. **依赖标记（关键）**：在 Upload 页面的 **Dependencies** 区域搜索 *Twilight Forest*，将其标记为 **Required**。这样玩家缺 TF 时 CurseForge 会自动提示并一键安装。
 4. 发布前用 **Edit / Review** 检查：文件 `LICENSE`（MIT）、changelog 贴 `CHANGELOG.md` 的 1.0.0 一节。
-5. 发布为 Public 后，项目页 Get URL → 之后可回头把 `neoforge.mods.toml` 的 `links` 字段补上（目前暂缺）。
+5. 发布为 Public 后，项目页 Get URL → 已写入 `neoforge.mods.toml` 的 `displayURL` 字段（NeoForge 21.1 起为 `displayURL`，显示在游戏内模组列表界面；Forge 老式 `[mods.<modid>.links]` 子树在 NeoForge 21.1 已不支持）。
 
 ## 4. 截图清单（CurseForge 新项目要求 ≥3 张，建议 5-8 张）
 

@@ -45,4 +45,8 @@ dependencies {
 // 将 LICENSE 打包进 jar（mods.toml 声明 MIT，jar 内应带许可证文件，CF 惯例）
 jar {
     from rootProject.file('LICENSE')
+    // mods.toml 的 ${file.jarVersion} 占位符从 jar manifest 读取；缺失时游戏内显示 "0.0NONE"
+    manifest {
+        attributes 'Implementation-Version': project.version
+    }
 }

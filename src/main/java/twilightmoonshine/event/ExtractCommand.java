@@ -42,9 +42,10 @@ public class ExtractCommand {
     }
 
     private static Component secretLine(ServerPlayer player, String key, List<ResourceLocation> candidates) {
+        Component separator = Component.translatable("message.twilightmoonshine.material_separator");
         Component names = SecretRecipeLogic.secretFor(player.level(), candidates).stream()
             .map(ExtractCommand::displayName)
-            .reduce((a, b) -> a.copy().append("、").append(b))
+            .reduce((a, b) -> a.copy().append(separator).append(b))
             .orElse(Component.literal("?"));
         return Component.translatable(key, names);
     }
