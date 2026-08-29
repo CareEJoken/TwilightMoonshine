@@ -23,7 +23,7 @@ import java.util.function.Supplier;
 
 /**
  * 喷火甲虫图标物品渲染器（"夕阳甲虫乐队"进度图标用）：
- * GUI 里以 30° 俯角 + 缓慢自转渲染 TF 喷火甲虫 3D 模型，仿月兔战利品 ISTER。
+ * GUI 里以 30° 俯角渲染 TF 喷火甲虫 3D 模型，固定为 -45° 朝向（同进度页暂停帧）。
  */
 public class FireBeetleIconISTER extends BlockEntityWithoutLevelRenderer {
 
@@ -56,7 +56,6 @@ public class FireBeetleIconISTER extends BlockEntityWithoutLevelRenderer {
 
     @Override
     public void renderByItem(ItemStack stack, ItemDisplayContext camera, PoseStack pose, MultiBufferSource buffers, int light, int overlay) {
-        Minecraft minecraft = Minecraft.getInstance();
         if (camera == ItemDisplayContext.GUI) {
             Lighting.setupFor3DItems();
             pose.pushPose();
@@ -64,8 +63,9 @@ public class FireBeetleIconISTER extends BlockEntityWithoutLevelRenderer {
             pose.translate(0.05F, 17.5F/16.0F, 0.0F);
             // pose.translate(0.5F, 0.5F, 0.5F);          // 图标中心
             pose.mulPose(Axis.XP.rotationDegrees(30));   // 30° 俯角
-            // 与月兔战利品相同的 tick 计时旋转（20°/秒，暂停时停在 -45°）
-            pose.mulPose(Axis.YN.rotationDegrees(!minecraft.isPaused() ? ClientGameEvents.time % 360 : -45));
+            // 不旋转：固定为进度页暂停时的 -45° 静止帧。
+            // toast 走同一渲染管线且只有 16px 大，自转时旋转轴不在虫身中心会绕外甩，直接禁用。
+            pose.mulPose(Axis.YN.rotationDegrees(-45.0F));
             //pose.translate(-0.5F, -0.5F, -0.5F);       // 旋转后回到模型坐标系原点
             //pose.translate(0.0F, 0.25F, 0.0F);         // 抬高 0.25（同"完美的羊"谜题羊奖杯图标）
             pose.scale(0.6F, 0.6F, 0.6F);                // 甲虫宽约 26px，缩到 15.6px 适配 16px 图标

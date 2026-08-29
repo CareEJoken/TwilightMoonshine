@@ -1,5 +1,8 @@
 {
   "itemGroup.twilightmoonshine": "暮色月光",
+  "fml.menu.mods.info.description.twilightmoonshine": "暮色森林附属模组：月兔与月光私酿、月石建材、萃取机、重新启用的蘑菇塔与任务岛结构、新药水效果，以及夕阳甲虫乐队。",
+  "config.twilightmoonshine.mushroomCastleChance": "蘑菇城堡生成概率",
+  "config.twilightmoonshine.mushroomCastleChance.tooltip": "浓密蘑菇林地标中心生成蘑菇城堡（蘑菇塔）的百分比概率；设为 0% 时与暮色森林原版行为一致。",
   "entity.twilightmoonshine.moon_rabbit": "月兔",
   "item.twilightmoonshine.moon_rabbit_spawn_egg": "月兔刷怪蛋",
   "item.twilightmoonshine.moon_stone_shard": "月石碎片",

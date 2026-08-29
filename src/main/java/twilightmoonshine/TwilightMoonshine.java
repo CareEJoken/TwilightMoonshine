@@ -48,8 +48,8 @@ import twilightmoonshine.block.entity.MoonRabbitTrophyBlockEntity;
 import twilightmoonshine.config.Config;
 import twilightmoonshine.effect.TwilightEmbraceEffect;
 import twilightmoonshine.entity.MoonRabbit;
-import twilightmoonshine.item.MoonBellItem;
 import twilightmoonshine.item.MoonshineItem;
+// TODO 月之铃（未完成）：import twilightmoonshine.item.MoonBellItem;
 import twilightmoonshine.item.SecretPageItem;
 import twilightmoonshine.item.recipe.PotionArrowRecipe;
 import twilightmoonshine.item.recipe.SecretRecipe;
@@ -69,7 +69,7 @@ public class TwilightMoonshine {
 
     public static final DeferredHolder<MapDecorationType, MapDecorationType> MUSHROOM_TOWER =
         MAP_DECORATIONS.register("mushroom_tower", () -> new MapDecorationType(
-            ResourceLocation.fromNamespaceAndPath(MODID, "map/decorations/mushroom_tower"),
+            ResourceLocation.fromNamespaceAndPath(MODID, "mushroom_tower"),
             true, -1, false, true
         ));
 
@@ -148,9 +148,10 @@ public class TwilightMoonshine {
     public static final DeferredHolder<Item, Item> TWILIGHT_PLANT_EXTRACT =
         ITEMS.register("twilight_plant_extract", () -> new Item(new Item.Properties()));
 
+    // TODO 月之铃（未完成，临时禁用）：
     // 月之铃：右键切换暮色森林"月光"（月亮出现 + 天光提升）
-    public static final DeferredHolder<Item, Item> MOON_BELL =
-        ITEMS.register("moon_bell", () -> new MoonBellItem(new Item.Properties().stacksTo(1)));
+    // public static final DeferredHolder<Item, Item> MOON_BELL =
+    //     ITEMS.register("moon_bell", () -> new MoonBellItem(new Item.Properties().stacksTo(1)));
 
     // 月光私酿：饮用后 8 分钟抗火+水肺+夜视，目前仅创造模式获取
     public static final DeferredHolder<Item, MoonshineItem> MOONSHINE =
@@ -294,9 +295,10 @@ public class TwilightMoonshine {
     public static final DeferredHolder<CriterionTrigger<?>, EmbraceProximityTrigger> MOON_RABBIT_INFLATE_TRIGGER =
         CRITERION_TRIGGERS.register("moon_rabbit_inflate", EmbraceProximityTrigger::new);
 
+    // TODO 满月终临（未完成，临时禁用）：
     // 满月终临：在暮色森林中成功使用一次月之铃（MoonBellItem.use 服务端分支）
-    public static final DeferredHolder<CriterionTrigger<?>, EmbraceProximityTrigger> MOON_BELL_USED_TRIGGER =
-        CRITERION_TRIGGERS.register("moon_bell_used", EmbraceProximityTrigger::new);
+    // public static final DeferredHolder<CriterionTrigger<?>, EmbraceProximityTrigger> MOON_BELL_USED_TRIGGER =
+    //     CRITERION_TRIGGERS.register("moon_bell_used", EmbraceProximityTrigger::new);
 
     // 光之川：发光状态下靠近迷雾狼/游魂 4 格内（RecipeLearningEvents.checkAlloyFromLuredMobs 纯靠近判据）
     public static final DeferredHolder<CriterionTrigger<?>, EmbraceProximityTrigger> LURE_APPROACH_TRIGGER =

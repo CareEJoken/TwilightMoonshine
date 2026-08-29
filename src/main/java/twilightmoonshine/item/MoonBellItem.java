@@ -50,10 +50,11 @@ public class MoonBellItem extends Item {
         MoonlightSyncPayload.broadcast(serverLevel, nowActive);
         // 暂时复用原版钟声（block.bell.resonate），以后换自定义音效
         serverLevel.playSound(null, player.blockPosition(), SoundEvents.BELL_RESONATE, SoundSource.BLOCKS, 2.0F, 1.0F);
-        // 满月终临：成功使用一次月之铃（启动/关闭月光都算一次摇铃）
-        if (player instanceof ServerPlayer serverPlayer) {
-            TwilightMoonshine.MOON_BELL_USED_TRIGGER.get().trigger(serverPlayer);
-        }
+        // TODO 满月终临（未完成，临时禁用）：
+        // 在暮色森林中成功使用一次月之铃（启动/关闭月光都算一次摇铃）
+        // if (player instanceof ServerPlayer serverPlayer) {
+        //     TwilightMoonshine.MOON_BELL_USED_TRIGGER.get().trigger(serverPlayer);
+        // }
         return InteractionResultHolder.consume(stack);
     }
 }

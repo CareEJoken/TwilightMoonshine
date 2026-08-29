@@ -1,5 +1,7 @@
 {
   "itemGroup.twilightmoonshine": "Twilight Moonshine",
+  "config.twilightmoonshine.mushroomCastleChance": "Mushroom Castle Chance",
+  "config.twilightmoonshine.mushroomCastleChance.tooltip": "Chance (%) that the Mushroom Tower generates at a Dense Mushroom Forest landmark center. 0% = vanilla Twilight Forest 4.8 behavior.",
   "entity.twilightmoonshine.moon_rabbit": "Moon Rabbit",
   "item.twilightmoonshine.moon_rabbit_spawn_egg": "Moon Rabbit Spawn Egg",
   "item.twilightmoonshine.moon_stone_shard": "Moon Stone Shard",

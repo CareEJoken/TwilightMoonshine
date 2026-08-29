@@ -6,7 +6,7 @@ license = "MIT"
     modId = "twilightmoonshine"
     version = "${file.jarVersion}"
     displayName = "Twilight Moonshine"
-    description = "Tweaks for Twilight Forest - re-enables Mushroom Tower generation and adds map icon."
+    description = "Tweaks and content for Twilight Forest: the moon rabbit and moonshine brewing, moon stone construction materials, the extractor machine, re-enabled Mushroom Tower and Quest Island generation, new potion effects, and the sunset beetle band. Requires Twilight Forest 4.8+"
 
 [[mixins]]
     config = "twilightmoonshine.mixins.json"

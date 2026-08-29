@@ -29,7 +29,7 @@ public class CreativeTabSetup {
         event.accept(TwilightMoonshine.GLOW_ESSENCE.get());
         event.accept(TwilightMoonshine.TWILIGHT_PLANT_EXTRACT.get());
         event.accept(TwilightMoonshine.TWILIGHT_ALLOY.get());
-        event.accept(TwilightMoonshine.MOON_BELL.get());
+        // TODO 月之铃（未完成，临时禁用）：event.accept(TwilightMoonshine.MOON_BELL.get());
         event.accept(TwilightMoonshine.MOON_RABBIT_TROPHY.get());
         event.accept(TwilightMoonshine.MOON_RABBIT_SPAWN_EGG.get());
 

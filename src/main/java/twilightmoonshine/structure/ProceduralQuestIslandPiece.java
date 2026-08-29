@@ -18,7 +18,6 @@ import net.minecraft.world.level.levelgen.structure.StructurePiece;
 import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceSerializationContext;
 import twilightforest.init.TFBlocks;
 import twilightmoonshine.TwilightMoonshine;
-import twilightmoonshine.config.Config;
 import twilightmoonshine.entity.MoonRabbit;
 import twilightmoonshine.util.SchematicReader;
 import twilightmoonshine.util.SchematicReader.Schematic;
@@ -100,7 +99,6 @@ public class ProceduralQuestIslandPiece extends StructurePiece {
         int endZ = Math.min(schem.length() - 1, structureBoundingBox.maxZ() - baseZ);
 
         BlockPos.MutableBlockPos mpos = new BlockPos.MutableBlockPos();
-        double glassRatio = Config.LIGHT_BLUE_TO_BLUE_GLASS_RATIO.get();
 
         // Place schematic blocks in this chunk — flag 0 = no updates,
         // bulk placement during worldgen doesn't need them.
@@ -110,9 +108,8 @@ public class ProceduralQuestIslandPiece extends StructurePiece {
                     BlockState state = schem.blockAt(x, y, z);
                     if (state.isAir()) continue;
 
-                    // Randomly replace light_blue_stained_glass with blue_stained_glass
-                    if (state.is(Blocks.LIGHT_BLUE_STAINED_GLASS)
-                        && random.nextDouble() < glassRatio) {
+                    // Quest island glass is always pure blue
+                    if (state.is(Blocks.LIGHT_BLUE_STAINED_GLASS)) {
                         state = Blocks.BLUE_STAINED_GLASS.defaultBlockState();
                     }
 

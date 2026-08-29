@@ -7,18 +7,16 @@ public final class Config {
     private static final ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder();
 
     /**
-     * Chance that light_blue_stained_glass is replaced with blue_stained_glass
-     * during quest island placement.
-     * <p>
-     * 0.0 = all light blue<br>
-     * 0.5 = 1:1 ratio (default)<br>
-     * 1.0 = all blue
+     * Percentage chance that the Mushroom Tower (mushroom castle) generates
+     * at a Dense Mushroom Forest landmark center. 0 = vanilla TF 4.8 behavior.
      */
-    public static final ModConfigSpec.DoubleValue LIGHT_BLUE_TO_BLUE_GLASS_RATIO =
+    public static final ModConfigSpec.IntValue MUSHROOM_TOWER_CHANCE =
         BUILDER.comment(
-            "Ratio of light_blue_stained_glass replaced with blue_stained_glass.",
-            "0.0 = all light blue, 0.5 = 1:1, 1.0 = all blue"
-        ).defineInRange("lightBlueToBlueGlassRatio", 0.5, 0.0, 1.0);
+            "Percentage chance that the Mushroom Tower (mushroom castle) generates",
+            "at a Dense Mushroom Forest landmark center. 0 = vanilla Twilight Forest 4.8 behavior.",
+            "浓密蘑菇林地标中心生成蘑菇城堡（蘑菇塔）的百分比概率；设为 0 时与暮色森林原版行为一致。"
+        ).translation("config.twilightmoonshine.mushroomCastleChance")
+        .defineInRange("mushroomCastleChance", 50, 0, 100);
 
     public static final ModConfigSpec SPEC = BUILDER.build();
 

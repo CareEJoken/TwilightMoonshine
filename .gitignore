@@ -29,3 +29,11 @@ crash-reports/
 # Dev
 *.log
 build_and_deploy.bat
+
+# 开发素材与生成器（纹理候选、参考、临时脚本，不随发布仓库公开）
+icon_candidates/
+moon_shard_variants/
+reference/
+tools/
+__pycache__/
+*.pyc

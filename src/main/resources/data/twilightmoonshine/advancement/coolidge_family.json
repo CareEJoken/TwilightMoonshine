@@ -10,6 +10,7 @@
     "description": {
       "translate": "advancement.twilightmoonshine.coolidge_family.desc"
     },
+    "frame": "goal",
     "show_toast": true,
     "announce_to_chat": true
   },

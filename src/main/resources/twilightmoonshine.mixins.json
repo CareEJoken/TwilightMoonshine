@@ -3,6 +3,9 @@
   "package": "twilightmoonshine.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
+    "ChunkGeneratorMixin",
+    "ChunkGeneratorStructureStateMixin",
+    "LandmarkGridPlacementMixin",
     "LegacyLandmarkPlacementsMixin",
     "MixinLevel"
   ],

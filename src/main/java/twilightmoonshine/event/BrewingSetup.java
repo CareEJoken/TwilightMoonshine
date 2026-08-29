@@ -12,7 +12,26 @@ public class BrewingSetup {
 
     @SubscribeEvent
     public static void registerBrewing(RegisterBrewingRecipesEvent event) {
-        // 抗性药水的酿造配方已取消（物品本身保留）
+        // 粗制的药水 + 暮色合金粉末 → 抗性药水
+        event.getBuilder().addMix(
+            Potions.AWKWARD,
+            TwilightMoonshine.TWILIGHT_ALLOY.get(),
+            TwilightMoonshine.RESISTANCE_POTION
+        );
+
+        // 抗性药水 + 红石 → 延长版抗性药水
+        event.getBuilder().addMix(
+            TwilightMoonshine.RESISTANCE_POTION,
+            Items.REDSTONE,
+            TwilightMoonshine.LONG_RESISTANCE_POTION
+        );
+
+        // 抗性药水 + 荧石 → 加强版抗性药水
+        event.getBuilder().addMix(
+            TwilightMoonshine.RESISTANCE_POTION,
+            Items.GLOWSTONE_DUST,
+            TwilightMoonshine.STRONG_RESISTANCE_POTION
+        );
 
         // 水 + 月石碎片 → 微微发亮的药水（基底，无效果，类似平凡的药水）
         event.getBuilder().addMix(
