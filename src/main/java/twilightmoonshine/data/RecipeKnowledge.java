@@ -39,17 +39,12 @@ public final class RecipeKnowledge {
         return RecipeKnowledgeData.get(player.getServer()).isKnown(player.getUUID(), recipe);
     }
 
-    /** 解锁配方（开启神秘书页时调用）：未掌握 → 材料提示 + 触发判据，返回 true；已掌握 → 无操作，返回 false */
+    /** 解锁配方（开启神秘书页时调用）：未掌握 → 材料提示（actionbar 小字幕）+ 触发判据，返回 true；已掌握 → 无操作，返回 false */
     public static boolean grant(ServerPlayer player, ResourceLocation recipe) {
         if (!RecipeKnowledgeData.get(player.getServer()).grant(player.getUUID(), recipe)) {
             return false;
         }
-        Component materials = SecretRecipeLogic.secretFor(player.level(), candidatesFor(recipe)).stream()
-            .map(RecipeKnowledge::itemDisplayName)
-            .reduce((a, b) -> a.copy().append("、").append(b))
-            .orElse(Component.literal("?"));
-        player.displayClientMessage(
-            Component.translatable("message.twilightmoonshine.recipe_learned", itemDisplayName(recipe), materials), false);
+        showRecipeMessage(player, recipe);
         TwilightMoonshine.RECIPE_LEARNED_TRIGGER.get().trigger(player, recipe);
         // 特殊配方（CustomRecipe）会被 ServerRecipeBook.addRecipes 的 isSpecial() 过滤直接跳过，
         // 进不了原版解锁流。这里仿照其实现手动构造 ADD 包发到客户端：
@@ -61,6 +56,19 @@ public final class RecipeKnowledge {
             List.of(),
             player.getRecipeBook().getBookSettings()));
         return true;
+    }
+
+    /**
+     * 展示配方学习提示（actionbar 小字幕，不占用聊天窗）。
+     * 首次解锁（grant 里调用）与重复翻阅已掌握的神秘书页（SecretPageItem.use）用同一条同样内容。
+     */
+    public static void showRecipeMessage(ServerPlayer player, ResourceLocation recipe) {
+        Component materials = SecretRecipeLogic.secretFor(player.level(), candidatesFor(recipe)).stream()
+            .map(RecipeKnowledge::itemDisplayName)
+            .reduce((a, b) -> a.copy().append("、").append(b))
+            .orElse(Component.literal("?"));
+        player.displayClientMessage(
+            Component.translatable("message.twilightmoonshine.recipe_learned", itemDisplayName(recipe), materials), true);
     }
 
     /** 给予神秘书页（实物奖励，不发聊天消息）：未掌握才给；返回是否给出 */

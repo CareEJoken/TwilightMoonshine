@@ -11,6 +11,8 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import twilightmoonshine.TwilightMoonshine;
+import twilightmoonshine.data.RecipeKnowledge;
+import twilightmoonshine.item.SecretPageItem;
 
 @EventBusSubscriber(modid = TwilightMoonshine.MODID, bus = EventBusSubscriber.Bus.MOD)
 public class CreativeTabSetup {
@@ -29,6 +31,12 @@ public class CreativeTabSetup {
         event.accept(TwilightMoonshine.GLOW_ESSENCE.get());
         event.accept(TwilightMoonshine.TWILIGHT_PLANT_EXTRACT.get());
         event.accept(TwilightMoonshine.TWILIGHT_ALLOY.get());
+
+        // 神秘书页 — 三张绑好配方的"配方卡"（直接标注配方名 + 附魔光效，便于分辨；右键即可解锁）
+        event.accept(SecretPageItem.recipeCard(RecipeKnowledge.PLANT_EXTRACT));
+        event.accept(SecretPageItem.recipeCard(RecipeKnowledge.GLOW_ESSENCE));
+        event.accept(SecretPageItem.recipeCard(RecipeKnowledge.ALLOY));
+
         // TODO 月之铃（未完成，临时禁用）：event.accept(TwilightMoonshine.MOON_BELL.get());
         event.accept(TwilightMoonshine.MOON_RABBIT_TROPHY.get());
         event.accept(TwilightMoonshine.MOON_RABBIT_SPAWN_EGG.get());

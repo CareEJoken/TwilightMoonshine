@@ -153,16 +153,16 @@ public class TwilightMoonshine {
     // public static final DeferredHolder<Item, Item> MOON_BELL =
     //     ITEMS.register("moon_bell", () -> new MoonBellItem(new Item.Properties().stacksTo(1)));
 
-    // 月光私酿：饮用后 8 分钟抗火+水肺+夜视，目前仅创造模式获取
+    // 月光私酿：饮后 8 分钟抗火+水肺+夜视；由月兔用三种药水交换获得
     public static final DeferredHolder<Item, MoonshineItem> MOONSHINE =
         ITEMS.register("moonshine", () -> new MoonshineItem(new Item.Properties().stacksTo(16).rarity(Rarity.UNCOMMON)));
 
-    // 暮色合金粉末：目前仅创造模式获取（材质为占位图，后续替换）
+    // 暮色合金粉末：经秘密配方系统合成（配方通过神秘书页/诱怪等渠道解锁；材质为占位图，后续替换）
     public static final DeferredHolder<Item, Item> TWILIGHT_ALLOY =
         ITEMS.register("twilight_alloy", () -> new Item(new Item.Properties()));
 
     // 神秘书页：秘密配方渠道的实物奖励（月兔喷嚏 / 吸引动物 / 荧光引路），
-    // 右键翻开后消耗并解锁一张配方（绑定配方存在 custom_data，见 SecretPageItem）
+    // 右键翻开后不消耗并解锁一张配方，之后成为对应配方的"配方卡"（绑定配方存在 custom_data，见 SecretPageItem）
     public static final DeferredHolder<Item, SecretPageItem> SECRET_PAGE =
         ITEMS.register("secret_page", () -> new SecretPageItem(new Item.Properties().stacksTo(16)));
 

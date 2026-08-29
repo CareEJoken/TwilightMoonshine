@@ -19,6 +19,13 @@ public class BrewingSetup {
             TwilightMoonshine.RESISTANCE_POTION
         );
 
+        // 微微发亮的药水 + 暮色合金粉末 → 抗性药水（与荧光/暮色同为双基底）
+        event.getBuilder().addMix(
+            TwilightMoonshine.FAINTLY_GLOWING_POTION,
+            TwilightMoonshine.TWILIGHT_ALLOY.get(),
+            TwilightMoonshine.RESISTANCE_POTION
+        );
+
         // 抗性药水 + 红石 → 延长版抗性药水
         event.getBuilder().addMix(
             TwilightMoonshine.RESISTANCE_POTION,

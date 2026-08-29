@@ -41,3 +41,8 @@ dependencies {
     // 运行时加载 TF universal jar（含 shaded beanification）
     runtimeOnly files('../twilightforest/build/libs/twilightforest-1.21.1-4.8-universal.jar')
 }
+
+// 将 LICENSE 打包进 jar（mods.toml 声明 MIT，jar 内应带许可证文件，CF 惯例）
+jar {
+    from rootProject.file('LICENSE')
+}

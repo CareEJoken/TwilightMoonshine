@@ -16,7 +16,7 @@ Requires Minecraft **1.21.1**, NeoForge **21.1.x** and **Twilight Forest 4.8+**.
 
 ### Brewing & Alchemy
 - New potion effects: **Resistance**, **Faintly Glowing**, **Glow** and **Twilight**, each available in regular / extended forms, splash & lingering variants, tipped arrows and spectral arrows.
-- **Extractor** — a new machine to process twilight plants into Twilight Plant Extract, Twilight Glow Essence and (1/3 / 2/3) extracts.
+- **Secret recipes** — discover the hidden recipes for Twilight Plant Extract, Twilight Glow Essence and Twilight Alloy Powder through Secret Pages.
 - **Twilight Alloy Powder** & **Secret Pages** — discover secret recipes and craft them up.
 
 ### Twilight Forest Adjustments (server-side datapack + mixins)

@@ -79,6 +79,8 @@ public class MoonRabbit extends Rabbit {
     private boolean firstSneezeDone;
     /** 药水交换：已收的药水类别位（1=暮色、2=荧光、4=抗性），集齐三瓶送月光私酿（随 NBT 存档） */
     private byte potionTradeBits;
+    /** 首次集齐三瓶药水时的纪念：第一次完成兑换额外送一座月兔战利品，之后只送私酿（随 NBT 存档） */
+    private boolean trophyGiven;
 
     @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
@@ -246,16 +248,25 @@ public class MoonRabbit extends Rabbit {
         Component potionName = stack.getHoverName();
         this.potionTradeBits = (byte) (this.potionTradeBits | give);
         stack.shrink(1);
-        // 喝掉后返还空瓶
-        player.addItem(new ItemStack(Items.GLASS_BOTTLE));
         // 喝药水用"啜饮"音效（不是吃东西的声音）
         this.playSound(SoundEvents.GENERIC_DRINK, 1.0F, 1.0F);
         if (this.potionTradeBits == 7) {
             // 集齐三种：兑一杯月光私酿，重新计数
             this.potionTradeBits = 0;
-            player.displayClientMessage(
-                Component.translatable("message.twilightmoonshine.potion_trade.complete"), true);
-            player.addItem(new ItemStack(TwilightMoonshine.MOONSHINE.get()));
+            if (!this.trophyGiven) {
+                // 首次完成：私酿之外再送一座月兔战利品（只送一次）。
+                // 用合并消息而不用两条——displayClientMessage(true) 是 actionbar，
+                // 两条连着发只有最后一条看得见
+                this.trophyGiven = true;
+                player.displayClientMessage(
+                    Component.translatable("message.twilightmoonshine.potion_trade.complete_trophy"), true);
+                player.addItem(new ItemStack(TwilightMoonshine.MOONSHINE.get()));
+                player.addItem(new ItemStack(TwilightMoonshine.MOON_RABBIT_TROPHY.get()));
+            } else {
+                player.displayClientMessage(
+                    Component.translatable("message.twilightmoonshine.potion_trade.complete"), true);
+                player.addItem(new ItemStack(TwilightMoonshine.MOONSHINE.get()));
+            }
         } else {
             player.displayClientMessage(
                 Component.translatable("message.twilightmoonshine.potion_trade.taken", potionName), true);
@@ -336,6 +347,7 @@ public class MoonRabbit extends Rabbit {
         }
         tag.putBoolean("MoonFirstSneeze", this.firstSneezeDone);
         tag.putByte("MoonPotionTrade", this.potionTradeBits);
+        tag.putBoolean("MoonTrophyGiven", this.trophyGiven);
     }
 
     @Override
@@ -346,6 +358,7 @@ public class MoonRabbit extends Rabbit {
         this.recipeFeeder = tag.hasUUID("MoonRecipeFeeder") ? tag.getUUID("MoonRecipeFeeder") : null;
         this.firstSneezeDone = tag.getBoolean("MoonFirstSneeze");
         this.potionTradeBits = tag.getByte("MoonPotionTrade");
+        this.trophyGiven = tag.getBoolean("MoonTrophyGiven");
     }
 
     @Override

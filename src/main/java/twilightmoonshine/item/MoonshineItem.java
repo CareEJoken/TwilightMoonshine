@@ -20,7 +20,7 @@ import net.minecraft.world.level.Level;
 
 /**
  * 月光私酿：饮用后获得 8 分钟抗火、水肺与夜视。
- * 喝完返还玻璃瓶（创造模式除外），目前仅创造模式获取。
+ * 喝完返还玻璃瓶（创造模式除外）。
  */
 public class MoonshineItem extends Item {
 
