@@ -7,7 +7,11 @@
     "ChunkGeneratorStructureStateMixin",
     "LandmarkGridPlacementMixin",
     "LegacyLandmarkPlacementsMixin",
-    "MixinLevel"
+    "MixinLevel",
+    "MushroomTowerMainBridgeComponentMixin",
+    "MushroomTowerWingComponentMixin",
+    "TFStructureComponentOldAccessor",
+    "TowerWingComponentAccessor"
   ],
   "client": [
     "MixinLightTexture"

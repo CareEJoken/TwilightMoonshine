@@ -36,9 +36,13 @@ An addon for **Twilight Forest** (1.21.1) by CareEJoken.
 
 ## Requirements
 
-- Minecraft **1.21.1**
-- NeoForge **21.1.x**
-- Twilight Forest **4.8 or newer** (required)
+- Minecraft 1.21.1
+- NeoForge 21.1.x
+- **[Twilight Forest 4.8+]** — download it from CurseForge
+  (already installed? skip)
+> This addon **requires** the official Twilight Forest mod — it is not included,
+> and it is not available on Modrinth. Grab it here:
+> https://legacy.curseforge.com/minecraft/mc-mods/the-twilight-forest
 
 ## Installation
 
