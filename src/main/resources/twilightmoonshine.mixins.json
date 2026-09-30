@@ -8,7 +8,9 @@
     "LandmarkGridPlacementMixin",
     "LegacyLandmarkPlacementsMixin",
     "MixinLevel",
+    "MushroomTowerBridgeComponentMixin",
     "MushroomTowerMainBridgeComponentMixin",
+    "MushroomTowerMainComponentMixin",
     "MushroomTowerWingComponentMixin",
     "TFStructureComponentOldAccessor",
     "TowerWingComponentAccessor"

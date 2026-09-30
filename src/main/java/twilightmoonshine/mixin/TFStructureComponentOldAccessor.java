@@ -25,4 +25,11 @@ public interface TFStructureComponentOldAccessor {
 
 	@Invoker("placeBlock")
 	void twilightmoonshine$placeBlock(WorldGenLevel world, BlockState state, int x, int y, int z, BoundingBox sbb);
+
+	// 结构局部坐标 → 世界坐标（protected，在 TFStructureComponentOld 里按 this.rotation/朝向解算）
+	@Invoker("getWorldX")
+	int twilightmoonshine$getWorldX(int x, int z);
+
+	@Invoker("getWorldZ")
+	int twilightmoonshine$getWorldZ(int x, int z);
 }

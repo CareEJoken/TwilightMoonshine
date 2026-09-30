@@ -15,6 +15,7 @@ import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.levelgen.structure.StructurePiece;
 import net.minecraft.world.level.levelgen.structure.StructurePieceAccessor;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
@@ -23,6 +24,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 import twilightforest.world.components.structures.mushroomtower.MushroomTowerWingComponent;
 import twilightmoonshine.util.MushroomTowerDoors;
+
+import java.util.ArrayList;
 
 /**
  * 给蘑菇塔的内腔加一条贯通的梯子，顺手把沿途的楼板打穿。
@@ -38,7 +41,43 @@ import twilightmoonshine.util.MushroomTowerDoors;
  * {@code MushroomTowerMainComponent} 没有覆写，所以主塔和普通支塔都会走到这里。
  */
 @Mixin(value = MushroomTowerWingComponent.class, remap = false)
-public abstract class MushroomTowerWingComponentMixin {
+public abstract class MushroomTowerWingComponentMixin implements MushroomTowerDoors.SourceWingHolder {
+
+	/**
+	 * 桥用这两个字段记住"自己是从哪座塔伸出来的"，好在 {@code makeTowerWing} 末尾
+	 * 把源塔那侧的门洞一起挪掉。字段声明在 wing 上（塔、主塔、桥都继承得到），
+	 * 由 {@link MushroomTowerBridgeComponentMixin} 在桥的 {@code addChildren} 开头写入。
+	 */
+	@Unique
+	private MushroomTowerWingComponent twilightmoonshine$sourceWing;
+
+	/** 等着源塔 {@code addChildren} 收尾时一起改的门洞位移（懒建）。 */
+	@Unique
+	private ArrayList<MushroomTowerDoors.PendingShift> twilightmoonshine$pendingShifts;
+
+	@Override
+	public MushroomTowerWingComponent twilightmoonshine$getSourceWing() {
+		return this.twilightmoonshine$sourceWing;
+	}
+
+	@Override
+	public void twilightmoonshine$setSourceWing(MushroomTowerWingComponent source) {
+		this.twilightmoonshine$sourceWing = source;
+	}
+
+	@Override
+	public void twilightmoonshine$queueOpeningShift(MushroomTowerDoors.PendingShift shift) {
+		if (this.twilightmoonshine$pendingShifts == null) {
+			this.twilightmoonshine$pendingShifts = new ArrayList<>();
+		}
+		this.twilightmoonshine$pendingShifts.add(shift);
+	}
+
+	@Override
+	public void twilightmoonshine$flushOpeningShifts() {
+		if (this.twilightmoonshine$pendingShifts == null || this.twilightmoonshine$pendingShifts.isEmpty()) return;
+		MushroomTowerDoors.applyPendingShifts((StructurePiece) (Object) this, this.twilightmoonshine$pendingShifts);
+	}
 
 	/**
 	 * 塔的直径/高度用的 {@code size}/{@code height} 和摆方块的 {@code placeBlock}
@@ -148,6 +187,20 @@ public abstract class MushroomTowerWingComponentMixin {
 	private void twilightmoonshine$alignEntryDoor(StructurePieceAccessor list, RandomSource rand, int index, int x, int y, int z,
 												  int wingSize, int wingHeight, Rotation rotation, CallbackInfoReturnable<Boolean> cir,
 												  Direction direction, int[] dx, MushroomTowerWingComponent wing) {
-		MushroomTowerDoors.alignEntryDoor(((StructurePiece) (Object) this).getBoundingBox(), wing, direction);
+		MushroomTowerDoors.alignEntryDoor((StructurePiece) (Object) this, this.twilightmoonshine$sourceWing, wing, direction);
+	}
+
+	/**
+	 * 源塔自己 {@code addChildren} 收尾 —— 此时它给每条伸出去的走廊都记过 {@code PendingShift}
+	 * （都在这个方法里跑的 {@code makeBridge}/{@code makeMainBridge}），而且每条走廊的门洞
+	 * 也已经写进 {@code openings}（{@code makeBridge} 里 {@code addOpening} 在 {@code bridge.addChildren} 之后），
+	 * 正好一次改完。早于序列化（doorInts）也早于任何 postProcess。
+	 * <p>
+	 * 主塔走自己覆写的 {@code addChildren}，不会经过这份基类方法 —— 由
+	 * {@link MushroomTowerMainComponentMixin} 补上同样的收尾。
+	 */
+	@Inject(method = "addChildren", at = @At("TAIL"))
+	private void twilightmoonshine$applyPendingShifts(StructurePiece parent, StructurePieceAccessor list, RandomSource rand, CallbackInfo ci) {
+		this.twilightmoonshine$flushOpeningShifts();
 	}
 }

@@ -19,6 +19,9 @@ import twilightmoonshine.util.MushroomTowerDoors;
  * {@code MushroomTowerMainBridgeComponent} 自己覆写的 {@code makeTowerWing}，
  * {@link MushroomTowerWingComponentMixin} 里注入基类那份管不到它，所以单开一份。
  * 注入点和算法与那边完全一致，详见 {@link MushroomTowerDoors#alignEntryDoor}。
+ * <p>
+ * "源塔"（这条主桥是从哪座塔伸出来的）由 {@link MushroomTowerBridgeComponentMixin}
+ * 在桥的 {@code addChildren} 开头写好 —— 主桥继承桥的那份实现，同样吃到。
  */
 @Mixin(value = MushroomTowerMainBridgeComponent.class, remap = false)
 public abstract class MushroomTowerMainBridgeComponentMixin {
@@ -29,6 +32,7 @@ public abstract class MushroomTowerMainBridgeComponentMixin {
 	private void twilightmoonshine$alignEntryDoor(StructurePieceAccessor list, RandomSource rand, int index, int x, int y, int z,
 												  int wingSize, int wingHeight, Rotation rotation, CallbackInfoReturnable<Boolean> cir,
 												  Direction direction, int[] dx, MushroomTowerMainComponent wing) {
-		MushroomTowerDoors.alignEntryDoor(((StructurePiece) (Object) this).getBoundingBox(), wing, direction);
+		MushroomTowerDoors.alignEntryDoor((StructurePiece) (Object) this,
+			((MushroomTowerDoors.SourceWingHolder) (Object) this).twilightmoonshine$getSourceWing(), wing, direction);
 	}
 }
