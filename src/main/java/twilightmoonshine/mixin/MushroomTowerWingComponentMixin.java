@@ -23,6 +23,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 import twilightforest.world.components.structures.mushroomtower.MushroomTowerWingComponent;
+import twilightmoonshine.util.MushroomTowerDecor;
 import twilightmoonshine.util.MushroomTowerDoors;
 
 import java.util.ArrayList;
@@ -142,6 +143,46 @@ public abstract class MushroomTowerWingComponentMixin implements MushroomTowerDo
 		for (int dy = 1; dy < height; dy++) {
 			this.twilightmoonshine$placeBlock(world, ladder, ladderX, dy, ladderZ, sbb);
 		}
+	}
+
+	/**
+	 * 房间装饰：家具 / 灯光 / 战利品箱 / 刷怪笼 —— 逻辑见 {@link MushroomTowerDecor#decorateTower}。
+	 * <p>
+	 * TF 把 {@code decorateFloor} 覆写成空方法、{@code postProcess} 又不调它，房间一直是光板；
+	 * 这里跟梯子一样挂在 {@code postProcess} 收尾，此时楼板、墙、门洞都已铺完。
+	 * {@code MushroomTowerMainComponent} 没有覆写 {@code postProcess}，所以主塔和普通支塔
+	 * 都会走到；桥覆写了（走道由它自己铺），那边的路灯在
+	 * {@link MushroomTowerBridgeComponentMixin} 里单独补。
+	 */
+	@Inject(method = "postProcess", at = @At("TAIL"))
+	private void twilightmoonshine$decorateTower(WorldGenLevel world, StructureManager manager, ChunkGenerator generator,
+												 RandomSource rand, BoundingBox sbb, ChunkPos chunkPosIn, BlockPos blockPos,
+												 CallbackInfo ci) {
+		MushroomTowerDecor.decorateTower((StructurePiece) (Object) this, world, sbb);
+	}
+
+	/**
+	 * 主塔一层正门的门廊（平台 / 台阶 / 雨棚 / 壁灯 / 路灯）—— 逻辑见
+	 * {@link MushroomTowerDecor#decorateMainEntrance}。方法内部只认主塔
+	 * （{@code MushroomTowerMainComponent}），支塔走到这里会直接返回。
+	 */
+	@Inject(method = "postProcess", at = @At("TAIL"))
+	private void twilightmoonshine$decorateMainEntrance(WorldGenLevel world, StructureManager manager, ChunkGenerator generator,
+														RandomSource rand, BoundingBox sbb, ChunkPos chunkPosIn, BlockPos blockPos,
+														CallbackInfo ci) {
+		MushroomTowerDecor.decorateMainEntrance((StructurePiece) (Object) this, world, sbb);
+	}
+
+	/**
+	 * 塔基裙边补成实心圆盘（盖掉顶到墙根的地形方块）—— 逻辑见
+	 * {@link MushroomTowerDecor#sealBase}。主塔、上行者主塔、支塔都跑
+	 * （条件与 TF 自己的 hasBase = size > 3 一致）；桥覆写了 postProcess，不经过这里。
+	 */
+	@Inject(method = "postProcess", at = @At("TAIL"))
+	private void twilightmoonshine$sealBase(WorldGenLevel world, StructureManager manager, ChunkGenerator generator,
+											RandomSource rand, BoundingBox sbb, ChunkPos chunkPosIn, BlockPos blockPos,
+											CallbackInfo ci) {
+		MushroomTowerDecor.sealBase((StructurePiece) (Object) this, world, sbb);
 	}
 
 	/**
